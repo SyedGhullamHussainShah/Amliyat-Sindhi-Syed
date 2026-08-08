@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#8b7355" />
+  <meta name="description" content="عملیات سندھی سید - علم الحروف، ابجد، موکل، ترتیب، بست اور سیاروی ساعات" />
+  <link rel="manifest" href="manifest.json" />
+  <title>عملیات سندھی سید</title>
+  <style>
+    :root {
+      --bg: #f5f0e6;
+      --card: #faf6ee;
+      --border: #d4c4a8;
+      --primary: #8b7355;
+      --primary-dark: #6b5340;
+      --accent: #a67c52;
+      --text: #3d2b1f;
+      --muted: #7a6a55;
+      --success: #4a7c59;
+      --input-bg: #fffdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 10px;
+      line-height: 1.5;
+    }
+    .app { max-width: 480px; margin: 0 auto; padding-bottom: 40px; }
+    header {
+      text-align: center;
+      padding: 12px 0 16px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 1.35rem; color: var(--primary-dark); margin-bottom: 4px; }
+    header .subtitle { font-size: 0.8rem; color: var(--muted); }
+    .lang-switch { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; }
+    .lang-btn {
+      padding: 4px 12px; border: 1px solid var(--border); background: var(--card);
+      border-radius: 20px; font-size: 0.85rem; cursor: pointer; color: var(--text);
+    }
+    .lang-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .card-title {
+      font-size: 0.95rem; font-weight: 600; color: var(--primary-dark);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 4px; }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--input-bg); font-size: 1rem;
+      color: var(--text); margin-bottom: 10px; outline: none;
+    }
+    input:focus, select:focus { border-color: var(--primary); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .result-box {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;<!-- Planetary Hour Section -->
+    <div class="card">
+      <div class="card-title" id="lblSaatSection">🕰️ سیاروی ساعت (ساعت)</div>
+      
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeAuto" onclick="setMode('auto')">آٹو</button>
+        <button class="mode-btn" id="modeCustom" onclick="setMode('custom')">کسٹم</button>
+      </div>
+
+      <div id="autoPanel">
+        <label id="lblCity">شہر</label>
+        <select id="citySelect" onchange="calculatePlanetaryHour()">
+          <option value="daulatpur" selected>دولت پور (شہید بینظیر آباد)</option>
+          <option value="nawabshah">نواب شاہ</option>
+          <option value="karachi">کراچی</option>
+          <option value="hyderabad">حیدرآباد</option>
+          <option value="lahore">لاہور</option>
+          <option value="islamabad">اسلام آباد</option>
+        </select>
+        <button class="btn btn-outline" onclick="calculatePlanetaryHour()" id="btnRefreshSaat">موجودہ ساعت معلوم کریں</button>
+      </div>
+
+      <div id="customPanel" style="display:none;">
+        <div class="row">
+          <div>
+            <label id="lblSunrise">سورج نکلا (HH:MM)</label>
+            <input type="time" id="customSunrise" value="05:56" />
+          </div>
+          <div>
+            <label id="lblSunset">سورج غروب (HH:MM)</label>
+            <input type="time" id="customSunset" value="19:12" />
+          </div>
+        </div>
+        <label id="lblCurrentTime">موجودہ وقت (HH:MM)</label>
+        <input type="time" id="customNow" />
+        <button class="btn btn-outline" onclick="calculateCustomHour()" id="btnCalcCustom">حساب لگائیں</button>
+      </div>
+
+      <div class="info-box" id="saatResult">
+        <div id="saatStatus">ساعت معلوم کرنے کے لیے بٹن دبائیں</div>
+        <div class="planet-name" id="planetName" style="margin-top:6px;"></div>
+        <div id="saatDetails" style="font-size:0.85rem; color:var(--muted); margin-top:4px;"></div>
+      </div>
+    </div>
+
+    <!-- Basic Inputs -->
+    <div class="card">
+      <div class="card-title" id="lblInputs">📝 بنیادی معلومات</div>
+      <label id="lblTalib">طالب + والدہ</label>
+      <input type="text" id="talib" placeholder="مثلاً: نوید بن احمد" />
+      <label id="lblMatlub">مطلوب + والدہ</label>
+      <input type="text" id="matlub" placeholder="مثلاً: مطلوب" />
+      <label id="lblMaqsad">مقصد</label>
+      <input type="text" id="maqsad" placeholder="مثلاً: حاجت روائی" />
+    </div>
+
+    <!-- Abjad Type -->
+    <div class="card">
+      <div class="card-title" id="lblAbjad">🔢 قسمِ ابجد</div>
+      <select id="abjadType">
+        <option value="arabi">ابجد عربی (کبیر)</option>
+        <option value="qamari">ابجد قمری</option>
+        <option value="shamsi">ابجد شمسی</option>
+        <option value="malfuzi">ابجد ملفوظی</option>
+        <option value="saghir">ابجد صغیر</option>
+        <option value="wasat">ابجد وسط</option>
+      </select>
+    </div>
+
+    <!-- Results -->
+    <div class="card">
+      <div class="card-title" id="lblResults">📊 نتائجِ ابجد و موکل</div>
+      <div>
+        <label id="lblTalibRes">طالب</label>
+        <div class="result-box" onclick="copyText(this)">
+          <div><span class="result-num" id="talibNum">—</span> <span class="result-muqal" id="talibMuqal"></span></div>
+          <span class="copy-hint">کاپی</span>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label id="lblMatlubRes">مطلوب</label>
+        <div class="result-box" onclick="copyText(this)">
+          <div><span class="result-num" id="matlubNum">—</span> <span class="result-muqal" id="matlubMuqal"></span></div>
+          <span class="copy-hint">کاپی</span>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label id="lblMaqsadRes">مقصد</label>
+        <div class="result-box" onclick="copyText(this)">
+          <div><span class="result-num" id="maqsadNum">—</span> <span class="result-muqal" id="maqsadMuqal"></span></div>
+          <span class="copy-hint">کاپی</span>
+        </div>
+      </div>
+    </div><!-- Time & Astrology -->
+    <div class="card">
+      <div class="card-title" id="lblTimeAstro">🌙 وقت و نجوم</div>
+      <div class="row">
+        <div>
+          <label id="lblElement">عنصر</label>
+          <select id="element">
+            <option value="nar">النار</option>
+            <option value="ma">الماء</option>
+            <option value="hawa">الهواء</option>
+            <option value="turab">التراب</option>
+          </select>
+        </div>
+        <div>
+          <label id="lblWaqt">وقت</label>
+          <select id="waqt">
+            <option value="layl">اللیل</option>
+            <option value="nahar">النہار</option>
+            <option value="nisf_layl">نصف اللیل</option>
+            <option value="nisf_nahar">نصف النہار</option>
+            <option value="sabah">الصباح</option>
+            <option value="masa">المساء</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label id="lblDay">دن</label>
+          <select id="day">
+            <option value="1">یوم الأحد</option>
+            <option value="2">یوم الإثنین</option>
+            <option value="3">یوم الثلاثاء</option>
+            <option value="4">یوم الأربعاء</option>
+            <option value="5">یوم الخمیس</option>
+            <option value="6">یوم الجمعة</option>
+            <option value="7" selected>یوم السبت</option>
+          </select>
+        </div>
+        <div>
+          <label id="lblSaat">ساعت (سیاروی)</label>
+          <select id="saat">
+            <option value="1">الساعة الأولى</option>
+            <option value="2">الساعة الثانیة</option>
+            <option value="3">الساعة الثالثة</option>
+            <option value="4">الساعة الرابعة</option>
+            <option value="5">الساعة الخامسة</option>
+            <option value="6">الساعة السادسة</option>
+            <option value="7">الساعة السابعة</option>
+            <option value="8">الساعة الثامنة</option>
+            <option value="9">الساعة التاسعة</option>
+            <option value="10">الساعة العاشرة</option>
+            <option value="11">الساعة الحادیة عشر</option>
+            <option value="12">الساعة الثانیة عشر</option>
+          </select>
+        </div>
+      </div>
+      <label id="lblBurj">برج / طالع</label>
+      <select id="burj">
+        <option value="hamal">الحمل</option>
+        <option value="thawr">الثور</option>
+        <option value="jawza">الجوزاء</option>
+        <option value="saratan">السرطان</option>
+        <option value="asad">الأسد</option>
+        <option value="sunbula">السنبلة</option>
+        <option value="mizan">المیزان</option>
+        <option value="aqrab">العقرب</option>
+        <option value="qaws">القوس</option>
+        <option value="jadi">الجدي</option>
+        <option value="dalw">الدلو</option>
+        <option value="hut">الحوت</option>
+      </select>
+      <label id="lblManzil">منزل القمر</label>
+      <select id="manzil">
+        <option value="1">الشرطین</option>
+        <option value="2">البطین</option>
+        <option value="3">الثریا</option>
+        <option value="4">الدبران</option>
+        <option value="5">الهقعة</option>
+        <option value="6">الهنعة</option>
+        <option value="7">الذراع</option>
+        <option value="8">النثرة</option>
+        <option value="9">الطرف</option>
+        <option value="10">الجبهة</option>
+        <option value="11">الزبرة</option>
+        <option value="12">الصرفة</option>
+        <option value="13">العواء</option>
+        <option value="14">السماك</option>
+        <option value="15">الغفر</option>
+        <option value="16">الزبانا</option>
+        <option value="17">الإكليل</option>
+        <option value="18">القلب</option>
+        <option value="19">الشولة</option>
+        <option value="20">النعائم</option>
+        <option value="21">البلدة</option>
+        <option value="22">سعد الذابح</option>
+        <option value="23">سعد بلع</option>
+        <option value="24">سعد السعود</option>
+        <option value="25">سعد الأخبية</option>
+        <option value="26">الفرغ المقدم</option>
+        <option value="27">الفرغ المؤخر</option>
+        <option value="28">الرشا</option>
+      </select>
+    </div>
+
+    <!-- Tartib & Bast -->
+    <div class="card">
+      <div class="card-title" id="lblTartib">📜 ترتیب و بست</div>
+      <label id="lblTartibType">قسمِ ترتیب</label>
+      <select id="tartibType">
+        <option value="mufrad">ترتیب مفرد</option>
+        <option value="murakkab">ترتیب مرکب</option>
+      </select>
+      <label id="lblBastType">قسمِ بست</label>
+      <select id="bastType">
+        <option value="muwafiq">بست موافق</option>
+        <option value="mukhalif">بست مخالف</option>
+      </select>
+      <button class="btn" id="btnCalculate" onclick="calculateAll()">حساب و نقش تیار کریں</button>
+    </div>
+
+    <!-- Final Output -->
+    <div class="card">
+      <div class="card-title" id="lblFinal">✨ نتیجہ / نقش</div>
+      <label id="lblMajmooa">مجموعہ اعداد</label>
+      <div class="result-box" onclick="copyText(this)">
+        <span class="result-num" id="totalSum">—</span>
+        <span class="copy-hint">کاپی</span>
+      </div>
+      <label id="lblTartibOut" style="margin-top:12px">ترتیب</label>
+      <div class="output-area" id="tartibOutput" onclick="copyRaw(this)">—</div>
+      <label id="lblBastOut" style="margin-top:12px">بست</label>
+      <div class="output-area" id="bastOutput" onclick="copyRaw(this)">—</div>
+      <button class="btn btn-secondary" style="margin-top:14px" onclick="copyAllResults()">تمام نتائج کاپی کریں</button>
+    </div>
+
+    <p class="note" id="noteText">
+      عملیات سندھی سید — دولت پور، شہید بینظیر آباد۔ آف لائن بھی کام کرتا ہے۔
+    </p>
+  </div>
+
+  <div class="toast" id="toast">کاپی ہو گیا!</div>
+
+  <script>
+    // JavaScript code will continue in next message if needed
+    alert("ابھی JavaScript والا حصہ الگ سے بھیج رہا ہوں۔ پہلے یہ حصہ پیسٹ کر لیں اور بتائیں");
+  </script>
+</body>
+</html>
+      padding: 10px 12px; margin-top: 6px; display: flex; justify-content: space-between;
