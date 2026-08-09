@@ -64,7 +64,61 @@
     input:focus, select:focus { border-color: var(--primary); }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .result-box {
-      background: #fff; border: 1px solid var(--border); border-radius: 10px;<!-- Planetary Hour Section -->
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; margin-top: 6px; display: flex; justify-content: space-between;
+      align-items: center; cursor: pointer;
+    }
+    .result-box:active { background: #f0e8d8; }
+    .result-num { font-size: 1.15rem; font-weight: 700; color: var(--primary-dark); }
+    .result-muqal { font-size: 0.9rem; color: var(--accent); }
+    .copy-hint { font-size: 0.7rem; color: var(--muted); }
+    .btn {
+      display: block; width: 100%; padding: 13px; border: none; border-radius: 12px;
+      background: var(--primary); color: #fff; font-size: 1.05rem; font-weight: 600;
+      cursor: pointer; margin-top: 8px;
+    }
+    .btn:active { background: var(--primary-dark); }
+    .btn-secondary { background: var(--accent); }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--primary); color: var(--primary);
+    }
+    .output-area {
+      background: #fff; border: 1px dashed var(--border); border-radius: 10px;
+      padding: 12px; min-height: 50px; font-size: 1.05rem; word-break: break-all;
+      text-align: center; margin-top: 8px; cursor: pointer;
+    }
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--success); color: #fff; padding: 10px 22px; border-radius: 30px;
+      font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999;
+    }
+    .toast.show { opacity: 1; }
+    .note { font-size: 0.75rem; color: var(--muted); text-align: center; margin-top: 16px; padding: 0 10px; }
+    .mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+    .mode-btn {
+      flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--card); cursor: pointer; text-align: center; font-size: 0.9rem;
+    }
+    .mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .info-box {
+      background: #fff8e7; border: 1px solid #e8d9b5; border-radius: 10px;
+      padding: 10px 12px; margin-top: 8px; font-size: 0.9rem;
+    }
+    .planet-name { font-weight: 700; color: var(--primary-dark); font-size: 1.1rem; }
+    [dir="ltr"] { text-align: left; }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ur">اردو</button>
+        <button class="lang-btn" data-lang="ar">العربية</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+      <h1 id="appTitle">عملیات سندھی سید</h1>
+      <div class="subtitle" id="appSubtitle">دولت پور • شہید بینظیر آباد • سندھ</div>
+    </header><!-- Planetary Hour Section -->
     <div class="card">
       <div class="card-title" id="lblSaatSection">🕰️ سیاروی ساعت (ساعت)</div>
       
@@ -299,10 +353,389 @@
 
   <div class="toast" id="toast">کاپی ہو گیا!</div>
 
-  <script>
-    // JavaScript code will continue in next message if needed
-    alert("ابھی JavaScript والا حصہ الگ سے بھیج رہا ہوں۔ پہلے یہ حصہ پیسٹ کر لیں اور بتائیں");
+  <script>// ========== LANGUAGE ==========
+    const translations = {
+      ur: {
+        appTitle: "عملیات سندھی سید",
+        appSubtitle: "دولت پور • شہید بینظیر آباد • سندھ",
+        lblSaatSection: "🕰️ سیاروی ساعت (ساعت)",
+        lblCity: "شہر",
+        btnRefreshSaat: "موجودہ ساعت معلوم کریں",
+        lblSunrise: "سورج نکلا",
+        lblSunset: "سورج غروب",
+        lblCurrentTime: "موجودہ وقت",
+        btnCalcCustom: "حساب لگائیں",
+        lblInputs: "📝 بنیادی معلومات",
+        lblTalib: "طالب + والدہ",
+        lblMatlub: "مطلوب + والدہ",
+        lblMaqsad: "مقصد",
+        lblAbjad: "🔢 قسمِ ابجد",
+        lblResults: "📊 نتائجِ ابجد و موکل",
+        lblTalibRes: "طالب",
+        lblMatlubRes: "مطلوب",
+        lblMaqsadRes: "مقصد",
+        lblTimeAstro: "🌙 وقت و نجوم",
+        lblElement: "عنصر",
+        lblWaqt: "وقت",
+        lblDay: "دن",
+        lblSaat: "ساعت (سیاروی)",
+        lblBurj: "برج / طالع",
+        lblManzil: "منزل القمر",
+        lblTartib: "📜 ترتیب و بست",
+        lblTartibType: "قسمِ ترتیب",
+        lblBastType: "قسمِ بست",
+        btnCalculate: "حساب و نقش تیار کریں",
+        lblFinal: "✨ نتیجہ / نقش",
+        lblMajmooa: "مجموعہ اعداد",
+        lblTartibOut: "ترتیب",
+        lblBastOut: "بست",
+        noteText: "عملیات سندھی سید — دولت پور، شہید بینظیر آباد۔ آف لائن بھی کام کرتا ہے۔",
+        copied: "کاپی ہو گیا!"
+      },
+      ar: {
+        appTitle: "عمليات سندهي سيد",
+        appSubtitle: "دولت بور • شهيد بينظير آباد • السند",
+        lblSaatSection: "🕰️ الساعة الكوكبية",
+        lblCity: "المدينة",
+        btnRefreshSaat: "اعرف الساعة الحالية",
+        lblSunrise: "شروق الشمس",
+        lblSunset: "غروب الشمس",
+        lblCurrentTime: "الوقت الحالي",
+        btnCalcCustom: "احسب",
+        lblInputs: "📝 المعلومات الأساسية",
+        lblTalib: "الطالب + الوالدة",
+        lblMatlub: "المطلوب + الوالدة",
+        lblMaqsad: "المقصد",
+        lblAbjad: "🔢 نوع الأبجد",
+        lblResults: "📊 نتائج الأبجد والموكل",
+        lblTalibRes: "الطالب",
+        lblMatlubRes: "المطلوب",
+        lblMaqsadRes: "المقصد",
+        lblTimeAstro: "🌙 الوقت والتنجيم",
+        lblElement: "العنصر",
+        lblWaqt: "الوقت",
+        lblDay: "اليوم",
+        lblSaat: "الساعة الكوكبية",
+        lblBurj: "البرج",
+        lblManzil: "منزل القمر",
+        lblTartib: "📜 الترتيب والبست",
+        lblTartibType: "نوع الترتيب",
+        lblBastType: "نوع البست",
+        btnCalculate: "احسب وأعدّ النقش",
+        lblFinal: "✨ النتيجة",
+        lblMajmooa: "مجموع الأعداد",
+        lblTartibOut: "الترتيب",
+        lblBastOut: "البست",
+        noteText: "عمليات سندهي سيد — تعمل دون اتصال.",
+        copied: "تم النسخ!"
+      },
+      en: {
+        appTitle: "Amliyat Sindhi Syed",
+        appSubtitle: "Daulatpur • Shaheed Benazirabad • Sindh",
+        lblSaatSection: "🕰️ Planetary Hour",
+        lblCity: "City",
+        btnRefreshSaat: "Get Current Hour",
+        lblSunrise: "Sunrise",
+        lblSunset: "Sunset",
+        lblCurrentTime: "Current Time",
+        btnCalcCustom: "Calculate",
+        lblInputs: "📝 Basic Information",
+        lblTalib: "Seeker + Mother",
+        lblMatlub: "Desired + Mother",
+        lblMaqsad: "Purpose",
+        lblAbjad: "🔢 Abjad Type",
+        lblResults: "📊 Abjad & Mukal Results",
+        lblTalibRes: "Seeker",
+        lblMatlubRes: "Desired",
+        lblMaqsadRes: "Purpose",
+        lblTimeAstro: "🌙 Time & Astrology",
+        lblElement: "Element",
+        lblWaqt: "Time",
+        lblDay: "Day",
+        lblSaat: "Planetary Hour",
+        lblBurj: "Zodiac",
+        lblManzil: "Lunar Mansion",
+        lblTartib: "📜 Arrangement & Bast",
+        lblTartibType: "Arrangement Type",
+        lblBastType: "Bast Type",
+        btnCalculate: "Calculate & Prepare",
+        lblFinal: "✨ Result",
+        lblMajmooa: "Total Sum",
+        lblTartibOut: "Arrangement",
+        lblBastOut: "Bast",
+        noteText: "Amliyat Sindhi Syed — Works offline.",
+        copied: "Copied!"
+      }
+    };
+
+    let currentLang = 'ur';
+    let currentMode = 'auto';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'en') ? 'ltr' : 'rtl';
+      for (const key in t) {
+        const el = document.getElementById(key);
+        if (el) el.textContent = t[key];
+      }
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      document.querySelectorAll('.copy-hint').forEach(el => el.textContent = t.copied === 'Copied!' ? 'Copy' : (lang==='ar'?'نسخ':'کاپی'));
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+    });// ========== PLANETARY HOUR ==========
+    const cityData = {
+      daulatpur: { sunrise: '05:56', sunset: '19:12', name: 'دولت پور' },
+      nawabshah: { sunrise: '05:55', sunset: '19:10', name: 'نواب شاہ' },
+      karachi:   { sunrise: '06:04', sunset: '19:13', name: 'کراچی' },
+      hyderabad: { sunrise: '05:58', sunset: '19:11', name: 'حیدرآباد' },
+      lahore:    { sunrise: '05:23', sunset: '18:53', name: 'لاہور' },
+      islamabad: { sunrise: '05:24', sunset: '19:01', name: 'اسلام آباد' }
+    };
+
+    const PLANETS = [
+      { ar: 'زحل', ur: 'زحل', en: 'Saturn' },
+      { ar: 'المشتري', ur: 'مشتری', en: 'Jupiter' },
+      { ar: 'المريخ', ur: 'مریخ', en: 'Mars' },
+      { ar: 'الشمس', ur: 'شمس', en: 'Sun' },
+      { ar: 'الزهرة', ur: 'زہرہ', en: 'Venus' },
+      { ar: 'عطارد', ur: 'عطارد', en: 'Mercury' },
+      { ar: 'القمر', ur: 'قمر', en: 'Moon' }
+    ];
+
+    function getDayStartIndex(jsDay) {
+      const map = [3, 6, 2, 5, 1, 4, 0];
+      return map[jsDay];
+    }
+
+    function timeToMinutes(t) {
+      const [h, m] = t.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function calculateHour(sunriseStr, sunsetStr, nowStr, jsDay) {
+      const sunrise = timeToMinutes(sunriseStr);
+      const sunset = timeToMinutes(sunsetStr);
+      let now = timeToMinutes(nowStr);
+
+      const dayLength = sunset - sunrise;
+      const nightLength = (24*60) - dayLength;
+      const dayHourLen = dayLength / 12;
+      const nightHourLen = nightLength / 12;
+
+      let hourNum, isDay, startPlanetIdx;
+      startPlanetIdx = getDayStartIndex(jsDay);
+
+      if (now >= sunrise && now < sunset) {
+        isDay = true;
+        const elapsed = now - sunrise;
+        hourNum = Math.floor(elapsed / dayHourLen) + 1;
+        if (hourNum > 12) hourNum = 12;
+      } else {
+        isDay = false;
+        let elapsed;
+        if (now >= sunset) {
+          elapsed = now - sunset;
+        } else {
+          elapsed = (now + 24*60) - sunset;
+        }
+        hourNum = Math.floor(elapsed / nightHourLen) + 1;
+        if (hourNum > 12) hourNum = 12;
+        startPlanetIdx = (startPlanetIdx + 12) % 7;
+      }
+
+      const planetIdx = (startPlanetIdx + (hourNum - 1)) % 7;
+      const planet = PLANETS[planetIdx];
+      return { hourNum, isDay, planet, planetIdx };
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('modeAuto').classList.toggle('active', mode === 'auto');
+      document.getElementById('modeCustom').classList.toggle('active', mode === 'custom');
+      document.getElementById('autoPanel').style.display = mode === 'auto' ? 'block' : 'none';
+      document.getElementById('customPanel').style.display = mode === 'custom' ? 'block' : 'none';
+    }
+
+    function calculatePlanetaryHour() {
+      const city = document.getElementById('citySelect').value;
+      const data = cityData[city];
+      const now = new Date();
+      const nowStr = `\( {String(now.getHours()).padStart(2,'0')}: \){String(now.getMinutes()).padStart(2,'0')}`;
+      const jsDay = now.getDay();
+      const result = calculateHour(data.sunrise, data.sunset, nowStr, jsDay);
+      showSaatResult(result, data.name, nowStr, data.sunrise, data.sunset);
+      document.getElementById('saat').value = result.hourNum;
+    }
+
+    function calculateCustomHour() {
+      const sunrise = document.getElementById('customSunrise').value || '05:56';
+      const sunset = document.getElementById('customSunset').value || '19:12';
+      let nowStr = document.getElementById('customNow').value;
+      if (!nowStr) {
+        const n = new Date();
+        nowStr = `\( {String(n.getHours()).padStart(2,'0')}: \){String(n.getMinutes()).padStart(2,'0')}`;
+        document.getElementById('customNow').value = nowStr;
+      }
+      const jsDay = new Date().getDay();
+      const result = calculateHour(sunrise, sunset, nowStr, jsDay);
+      showSaatResult(result, 'کسٹم', nowStr, sunrise, sunset);
+      document.getElementById('saat').value = result.hourNum;
+    }
+
+    function showSaatResult(result, cityName, nowStr, sunrise, sunset) {
+      const lang = currentLang;
+      const planetName = result.planet[lang] || result.planet.ur;
+      const dayNight = result.isDay ? (lang==='en'?'Day':(lang==='ar'?'نهار':'دن')) : (lang==='en'?'Night':(lang==='ar'?'ليل':'رات'));
+      document.getElementById('saatStatus').textContent = `${cityName} | ${nowStr} | ${dayNight}`;
+      document.getElementById('planetName').textContent = `${result.hourNum} — ${planetName}`;
+      document.getElementById('saatDetails').textContent = `طلوع: ${sunrise} | غروب: ${sunset}`;
+    }// ========== ABJAD ==========
+    const ABJAD_KABIR = {
+      'ا':1,'أ':1,'إ':1,'آ':1,'ب':2,'ج':3,'د':4,'ه':5,'ة':5,'و':6,'ز':7,'ح':8,'ط':9,
+      'ي':10,'ى':10,'ئ':10,'ك':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,
+      'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000,
+      'پ':2,'چ':3,'ژ':7,'گ':20,'ک':20,'ی':10,'ے':10
+    };
+
+    function getAbjadValue(text, type) {
+      if (!text) return 0;
+      let sum = 0;
+      for (let char of text) {
+        let val = ABJAD_KABIR[char] || 0;
+        if (type === 'saghir') {
+          val = val % 9;
+          if (val === 0 && ABJAD_KABIR[char]) val = 9;
+        } else if (type === 'wasat') {
+          val = val % 12;
+          if (val === 0 && ABJAD_KABIR[char]) val = 12;
+        }
+        sum += val;
+      }
+      return sum;
+    }
+
+    const MUQALS = ["طحائیل","خلائیل","ادحائیل","وزائیل","طحیش","هوش","روش","جبریل","میکائیل","اسرافیل","عزرائیل","رقیب","عتید","منکر","نکیر","رضوان","مالک"];
+
+    function getMuqal(num) {
+      if (!num || num <= 0) return "";
+      return MUQALS[num % MUQALS.length];
+    }
+
+    function updateNameResults() {
+      const type = document.getElementById('abjadType').value;
+      const tNum = getAbjadValue(document.getElementById('talib').value.trim(), type);
+      const mNum = getAbjadValue(document.getElementById('matlub').value.trim(), type);
+      const qNum = getAbjadValue(document.getElementById('maqsad').value.trim(), type);
+      document.getElementById('talibNum').textContent = tNum || "—";
+      document.getElementById('talibMuqal').textContent = getMuqal(tNum);
+      document.getElementById('matlubNum').textContent = mNum || "—";
+      document.getElementById('matlubMuqal').textContent = getMuqal(mNum);
+      document.getElementById('maqsadNum').textContent = qNum || "—";
+      document.getElementById('maqsadMuqal').textContent = getMuqal(qNum);
+    }
+
+    ['talib','matlub','maqsad','abjadType'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateNameResults);
+      document.getElementById(id).addEventListener('change', updateNameResults);
+    });
+
+    function numberToLetters(num, type) {
+      const letters = ['ا','ب','ج','د','ه','و','ز','ح','ط','ي','ك','ل','م','ن','س','ع','ف','ص','ق','ر','ش','ت'];
+      if (type === 'mufrad') {
+        let result = [];
+        let n = num;
+        while (n > 0) {
+          let digit = n % 10;
+          if (digit > 0) result.unshift(letters[digit-1] || 'ا');
+          n = Math.floor(n / 10);
+        }
+        return result.join(' ') || '—';
+      } else {
+        let str = "";
+        let n = num;
+        const places = [1000,100,10,1];
+        const placeLetters = {1000:'غ',100:'ق',10:'ي',1:'ا'};
+        for (let p of places) {
+          let count = Math.floor(n / p);
+          if (count > 0) {
+            str += (placeLetters[p] || 'ا').repeat(Math.min(count,5)) + " ";
+            n %= p;
+          }
+        }
+        return str.trim() || '—';
+      }
+    }
+
+    function generateBast(text, type) {
+      if (!text || text === '—') return '—';
+      const chars = text.replace(/\s/g,'').split('');
+      if (type === 'muwafiq') return chars.map(c => c + c).join(' ');
+      return chars.reverse().join(' ') + ' | ' + chars.join('');
+    }
+
+    function calculateAll() {
+      updateNameResults();
+      const type = document.getElementById('abjadType').value;
+      const tNum = getAbjadValue(document.getElementById('talib').value, type);
+      const mNum = getAbjadValue(document.getElementById('matlub').value, type);
+      const qNum = getAbjadValue(document.getElementById('maqsad').value, type);
+      const elementVal = {nar:4, ma:3, hawa:2, turab:1}[document.getElementById('element').value] || 0;
+      const saatVal = parseInt(document.getElementById('saat').value) || 0;
+      const manzilVal = parseInt(document.getElementById('manzil').value) || 0;
+      const dayVal = parseInt(document.getElementById('day').value) || 0;
+      const total = tNum + mNum + qNum + elementVal + saatVal + manzilVal + dayVal;
+      document.getElementById('totalSum').textContent = total;
+      const tartib = numberToLetters(total, document.getElementById('tartibType').value);
+      document.getElementById('tartibOutput').textContent = tartib;
+      document.getElementById('bastOutput').textContent = generateBast(tartib, document.getElementById('bastType').value);
+      showToast();
+    }
+
+    function copyText(el) {
+      const num = el.querySelector('.result-num')?.textContent || '';
+      const muqal = el.querySelector('.result-muqal')?.textContent || '';
+      navigator.clipboard.writeText((num + ' ' + muqal).trim()).then(() => showToast());
+    }
+    function copyRaw(el) {
+      navigator.clipboard.writeText(el.textContent).then(() => showToast());
+    }
+    function copyAllResults() {
+      const parts = [
+        'طالب: ' + document.getElementById('talibNum').textContent + ' ' + document.getElementById('talibMuqal').textContent,
+        'مطلوب: ' + document.getElementById('matlubNum').textContent + ' ' + document.getElementById('matlubMuqal').textContent,
+        'مقصد: ' + document.getElementById('maqsadNum').textContent + ' ' + document.getElementById('maqsadMuqal').textContent,
+        'مجموعہ: ' + document.getElementById('totalSum').textContent,
+        'ترتیب: ' + document.getElementById('tartibOutput').textContent,
+        'بست: ' + document.getElementById('bastOutput').textContent
+      ];
+      navigator.clipboard.writeText(parts.join('\n')).then(() => showToast());
+    }
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg || translations[currentLang].copied;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    // PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    // Init
+    setLanguage('ur');
+    updateNameResults();
+    const n = new Date();
+    document.getElementById('customNow').value = `\( {String(n.getHours()).padStart(2,'0')}: \){String(n.getMinutes()).padStart(2,'0')}`;
+    setTimeout(calculatePlanetaryHour, 300);
   </script>
 </body>
 </html>
-      padding: 10px 12px; margin-top: 6px; display: flex; justify-content: space-between;
