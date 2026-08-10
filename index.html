@@ -4,8 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عملیات سندھی سید</title>
-    <!-- Tailwind CSS for Golden & Dark Theme -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PWA Setup -->
+    <meta name="theme-color" content="#D4AF37">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script>
+        const manifest = {
+            "name": "عملیات سندھی سید",
+            "short_name": "عملیات سید",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#0d0d0d",
+            "theme_color": "#D4AF37",
+            "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png", "sizes": "192x192", "type": "image/png" }]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = URL.createObjectURL(blob);
+        document.head.appendChild(link);
+    </script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .theme-classic { background-color: #0d0d0d; color: #D4AF37; }
@@ -18,13 +38,14 @@
 </head>
 <body id="appBody" class="theme-classic min-h-screen pb-12 transition-colors duration-300">
 
-    <!-- Header (Only Syed Hussain) -->
+    <!-- Header -->
     <header class="p-4 border-b border-yellow-600/40 flex flex-wrap justify-between items-center gap-2 bg-black/60 shadow-lg">
         <div>
             <h1 class="text-2xl font-bold tracking-wide">عملیات سندھی سید</h1>
             <p class="text-xs text-yellow-500 opacity-90">سرپرست: Syed Ghullam Hussain Shah</p>
         </div>
-        <div>
+        <div class="flex items-center gap-2">
+            <button id="pwaInstallBtn" class="hidden px-2.5 py-1 bg-green-600 text-black font-bold text-xs rounded-full shadow">📲 ایپ انسٹال کریں</button>
             <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-black border border-yellow-600/60 rounded p-1.5 text-xs text-yellow-400 font-semibold focus:outline-none">
                 <option value="theme-classic">1. Classic (شاہی سنہری)</option>
                 <option value="theme-emerald">2. Emerald (زمردی)</option>
@@ -35,17 +56,17 @@
         </div>
     </header>
 
-    <!-- 9 Section Navigation Tabs -->
+    <!-- Navigation Tabs -->
     <nav class="flex overflow-x-auto gap-2 p-2 bg-black/80 border-b border-gray-800 text-xs whitespace-nowrap scrollbar-none shadow-md">
-        <button onclick="switchTab('sec1')" class="tab-btn px-3 py-2 rounded bg-yellow-600 text-black font-bold">1. تصرفاتِ کلی چشتی</button>
-        <button onclick="switchTab('sec2')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">2. طلسم العظیم</button>
-        <button onclick="switchTab('sec3')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">3. ساعت النجم</button>
-        <button onclick="switchTab('sec4')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">4. حساباتِ روحانی</button>
-        <button onclick="switchTab('sec5')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">5. تشخیص</button>
-        <button onclick="switchTab('sec6')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">6. میزان الحروف</button>
-        <button onclick="switchTab('sec7')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">7. طلسم التعجیب</button>
-        <button onclick="switchTab('sec8')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">8. مخفی قوانین (14)</button>
-        <button onclick="switchTab('sec9')" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">9. قانونِ شمع</button>
+        <button onclick="switchTab('sec1')" id="tab_sec1" class="tab-btn px-3 py-2 rounded bg-yellow-600 text-black font-bold">1. تصرفاتِ کلی چشتی</button>
+        <button onclick="switchTab('sec2')" id="tab_sec2" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">2. طلسم العظیم</button>
+        <button onclick="switchTab('sec3')" id="tab_sec3" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">3. ساعت النجم</button>
+        <button onclick="switchTab('sec4')" id="tab_sec4" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">4. حساباتِ روحانی</button>
+        <button onclick="switchTab('sec5')" id="tab_sec5" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">5. تشخیص</button>
+        <button onclick="switchTab('sec6')" id="tab_sec6" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">6. میزان الحروف</button>
+        <button onclick="switchTab('sec7')" id="tab_sec7" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">7. طلسم التعجیب</button>
+        <button onclick="switchTab('sec8')" id="tab_sec8" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">8. مخفی قوانین (14)</button>
+        <button onclick="switchTab('sec9')" id="tab_sec9" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">9. قانونِ شمع</button>
     </nav>
 
     <!-- Main Content Containers -->
@@ -56,7 +77,6 @@
             <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
                 <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">تصرفاتِ کلی چشتی</h2>
                 
-                <!-- Inputs -->
                 <div class="space-y-3 text-sm">
                     <div>
                         <label class="block text-xs font-semibold mb-1">طالب معہ والدہ:</label>
@@ -72,7 +92,6 @@
                     </div>
                 </div>
 
-                <!-- Controls -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
                     <div>
                         <label class="block mb-1">موکل پسوند:</label>
@@ -103,7 +122,6 @@
                     </div>
                 </div>
 
-                <!-- Calculation Grid Display -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-center text-xs font-mono">
                     <div onclick="copyToClipboard(this.innerText)" class="p-2 bg-black/60 border border-gray-800 rounded cursor-pointer hover:border-yellow-500">
                         <div>طالب اعداد و موکل</div>
@@ -119,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- Total Output -->
                 <div class="p-3 bg-yellow-900/20 border border-yellow-600/40 rounded text-center space-y-1">
                     <p class="text-xs">مجموعہ اعدادِ کل: <span id="v1_totalAbjad" class="font-bold text-yellow-400 text-base">0</span></p>
                     <p class="text-xs">حتمی عظیم موکل: <span id="v1_finalMuwakkil" class="font-bold text-green-400 text-sm">--</span></p>
@@ -127,78 +144,509 @@
             </div>
         </div>
 
-        <!-- SECTION 2 PLACEHOLDER -->
+        <!-- SECTION 2: طلسم العظیم -->
         <div id="sec2" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 2 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">طلسم العظیم</h2>
+                
+                <div class="space-y-3 text-sm">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">نام طالب معہ والدہ:</label>
+                        <input type="text" id="v2_name" oninput="v2_calculate()" placeholder="مثال: علی بن فاطمہ..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">مقصد لکھیں:</label>
+                        <input type="text" id="v2_purpose" oninput="v2_calculate()" placeholder="مثال: یا اللہ میرے رزق میں برکت پیدا فرما..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                </div>
+
+                <div class="p-3 bg-black/60 border border-yellow-600/50 rounded text-xs space-y-2">
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-1">
+                        <span class="font-bold text-yellow-400">اصل طلسم:</span>
+                        <button onclick="copyToClipboard(document.getElementById('v2_outCore').innerText)" class="px-2 py-0.5 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی کریں</button>
+                    </div>
+                    <div id="v2_outCore" class="font-mono text-center text-sm text-green-400 font-bold tracking-wider py-1">--</div>
+                </div>
+
+                <button onclick="document.getElementById('v2_detailsBox').classList.toggle('hidden')" class="w-full py-2 bg-yellow-600/20 border border-yellow-600/50 text-yellow-400 font-semibold text-xs rounded hover:bg-yellow-600/30">
+                    تفصیلات دیکھیں / چھپائیں 👁
+                </button>
+
+                <div id="v2_detailsBox" class="hidden grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono bg-black/50 p-3 border border-gray-800 rounded">
+                    <div class="p-1.5 bg-black/60 rounded flex justify-between">
+                        <span>کل اعداد قمری:</span> <b id="v2_abjad" class="text-yellow-400">0</b>
+                    </div>
+                    <div class="p-1.5 bg-black/60 rounded flex justify-between">
+                        <span>مفروع عدد (1 تا 9):</span> <b id="v2_single" class="text-yellow-400">0</b>
+                    </div>
+                    <div class="p-1.5 bg-black/60 rounded flex justify-between">
+                        <span>زبر اعداد:</span> <b id="v2_zabar" class="text-yellow-400">0</b>
+                    </div>
+                    <div class="p-1.5 bg-black/60 rounded flex justify-between">
+                        <span>بینات اعداد:</span> <b id="v2_bayyanat" class="text-yellow-400">0</b>
+                    </div>
+                    <div class="p-1.5 bg-black/60 rounded col-span-1 md:col-span-2">
+                        <span>سطرِ بسطِ حرفی:</span> <b id="v2_bast" class="text-green-400 block mt-1">--</b>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center justify-center p-3 bg-black/30 border border-gray-800 rounded">
+                    <p class="text-[11px] text-yellow-500 mb-2 font-semibold">گول دائرہ بسطِ حرفی (3 بار تکرار - اندر سے باہر)</p>
+                    <svg width="220" height="220" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
+                        <circle cx="100" cy="100" r="60" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="3"/>
+                        <circle cx="100" cy="100" r="35" fill="none" stroke="#D4AF37" stroke-width="1"/>
+                        <path id="v2_ringPath" d="M 15,100 A 85,85 0 1,1 185,100 A 85,85 0 1,1 15,100" fill="none"/>
+                        <text font-size="9" fill="#D4AF37">
+                            <textPath href="#v2_ringPath" id="v2_svgText">اصل طلسم • اصل طلسم •</textPath>
+                        </text>
+                        <text x="100" y="104" font-size="10" fill="#a3e635" text-anchor="middle" font-weight="bold">اصل طلسم</text>
+                    </svg>
+                </div>
+
+                <div class="p-2.5 bg-yellow-900/30 border border-yellow-600/40 rounded text-[11px] leading-relaxed">
+                    <strong>⚠ ضروری ہدایت:</strong> اپنے مقصد کو طلسم کے گرد گول دائرے میں بسطِ حرفی (الگ الگ حروف) کر کے تین بار لکھیں، پھر چاروں عناصر کے اعتبار سے استعمال میں لائیں۔
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 3 PLACEHOLDER -->
+        <!-- SECTION 3: ساعت النجم -->
         <div id="sec3" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 3 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">ساعت النجم (ساعت الخبیر)</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-black/60 p-3 border border-yellow-600/50 rounded">
+                    <div class="space-y-1 text-xs">
+                        <p class="text-sm font-bold text-yellow-400">موجودہ ساعت: <span id="v3_currentSaatName" class="text-green-400 font-bold text-base">زہرہ (سعد)</span></p>
+                        <p>وقت: <span id="v3_currentSaatTime" class="text-yellow-300">08:54 PM تا 09:46 PM</span></p>
+                        <p>ساعت نمبر: <span id="v3_currentSaatNo" class="font-bold">رات کی ساعت 15</span></p>
+                        <p class="text-xs text-red-400 font-mono mt-1">باقی وقت: <span id="v3_countdown">05 منٹ 30 سیکنڈ</span></p>
+                    </div>
+                    <div class="text-left font-mono border-t md:border-t-0 md:border-r border-gray-800 pt-2 md:pt-0 md:pr-3 space-y-1 text-xs">
+                        <p class="text-yellow-500 font-bold text-sm" id="v3_liveClock">00:00:00 PM</p>
+                        <p class="text-gray-400" id="v3_liveDate">10 اگست 2026</p>
+                        <p class="text-blue-400">طالع: <span id="v3_currentTala">حوت 29°</span></p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                    <div class="flex items-center gap-2">
+                        <button onclick="v3_changeDate(-1)" class="p-1.5 bg-yellow-600/20 border border-yellow-600/40 rounded text-yellow-400 font-bold hover:bg-yellow-600/40">پچھلا دن ◄</button>
+                        <button onclick="v3_resetDate()" class="p-1.5 bg-yellow-600 text-black rounded font-bold">آج</button>
+                        <button onclick="v3_changeDate(1)" class="p-1.5 bg-yellow-600/20 border border-yellow-600/40 rounded text-yellow-400 font-bold hover:bg-yellow-600/40">اگلا دن ►</button>
+                    </div>
+                    <div>
+                        <select id="v3_citySelect" onchange="v3_updateData()" class="w-full p-1.5 bg-black/80 border border-yellow-600/50 rounded text-yellow-400 font-bold">
+                            <option value="دولت پور">دولت پور (Sindh)</option>
+                            <option value="نواب شاہ">نواب شاہ / Shaheed Benazirabad</option>
+                            <option value="مورو">مورو (Moro)</option>
+                            <option value="قاضی احمد">قاضی احمد</option>
+                            <option value="خانپور">خانپور</option>
+                            <option value="کراچی">کراچی</option>
+                            <option value="حیدرآباد">حیدرآباد</option>
+                            <option value="لاہور">لاہور</option>
+                            <option value="اسلام آباد">اسلام آباد</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-black/60 border border-gray-800 rounded space-y-2 text-xs">
+                    <div class="flex justify-between items-center">
+                        <label class="font-bold text-yellow-400">مقصد / موضوع کا انتخاب کریں:</label>
+                        <span id="v3_hukamStatus" class="font-bold text-green-400 px-2 py-0.5 bg-black rounded border border-gray-700">حکم: دشواری</span>
+                    </div>
+                    <select id="v3_topicSelect" onchange="v3_updateRuling()" class="w-full p-1.5 bg-black/80 border border-gray-700 rounded text-yellow-300">
+                        <option value="عشق">عشق و محبت، مطیع کرنا، عورت کا مسئلہ</option>
+                        <option value="مال">مال و دولت، کاروبار، رزق میں برکت</option>
+                        <option value="دشمن">دشمن پر غلبہ، دفعِ شر، بندش</option>
+                        <option value="صحت">شفائے امراض، علاج معالجہ</option>
+                        <option value="سفر">سفر و ہجرت، نوکری، نقل مکانی</option>
+                    </select>
+                    <p id="v3_rulingText" class="p-2 bg-yellow-900/20 border border-yellow-600/30 rounded text-yellow-200 leading-relaxed">
+                        عشق و محبت مطیع کرنا عورت کا کسی عورت کے حصول کا سوال سند لاری وغیرہ میں کامیابی کے لیے یہ ساعت بہترین ہے۔
+                    </p>
+                </div>
+
+                <button onclick="document.getElementById('v3_astroDetails').classList.toggle('hidden')" class="w-full py-1.5 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 font-semibold text-xs rounded">
+                    ✨ احوالِ شمس، قمر و منازلِ قمر (دکھائیں / چھپائیں)
+                </button>
+
+                <div id="v3_astroDetails" class="hidden p-3 bg-black/60 border border-gray-800 rounded space-y-1 text-xs font-mono">
+                    <p>طالع (Ascendant): <b class="text-yellow-400">حوت 29° 38'</b></p>
+                    <p>شمس (Sun): <b class="text-yellow-400">اسد 8° 30'</b></p>
+                    <p>قمر (Moon): <b class="text-yellow-400">حوت 2° 24'</b></p>
+                    <p>منزلِ قمر: <b class="text-green-400">فرغ الدلو المقدم (26 / 28) - حرف: ض</b></p>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-bold text-xs text-yellow-400 border-b border-gray-800 pb-1">24 گھنٹے کی تفصیلی جدولِ ساعت</h3>
+                    <div id="v3_saatGrid" class="space-y-1 max-h-56 overflow-y-auto text-[11px] font-mono pr-1"></div>
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 4 PLACEHOLDER -->
+        <!-- SECTION 4: حساباتِ روحانی -->
         <div id="sec4" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 4 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">حساباتِ روحانی (چشتی)</h2>
+                
+                <div class="grid grid-cols-3 gap-1.5 text-[11px] font-bold">
+                    <button onclick="v4_selectMode('rishta')" id="v4_btn_rishta" class="p-2 rounded border border-yellow-600 bg-yellow-600 text-black">تعلقاتِ رشتہ</button>
+                    <button onclick="v4_selectMode('sharakat')" id="v4_btn_sharakat" class="p-2 rounded border border-gray-700 bg-black/60 text-yellow-400">شراکت و دوست</button>
+                    <button onclick="v4_selectMode('city')" id="v4_btn_city" class="p-2 rounded border border-gray-700 bg-black/60 text-yellow-400">علاقہ و شہر</button>
+                </div>
+
+                <div id="v4_formArea" class="space-y-3 text-xs bg-black/60 p-3 border border-gray-800 rounded">
+                    <div id="v4_form_rishta" class="space-y-2">
+                        <p class="text-yellow-400 font-bold mb-1">حساب تعلقاتِ رشتہ و ازدواج</p>
+                        <div>
+                            <label class="block mb-1">طالب معہ والدہ:</label>
+                            <input type="text" id="v4_r_talib" placeholder="طالب اور اس کی ماں کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
+                        </div>
+                        <div>
+                            <label class="block mb-1">مطلوب معہ والدہ:</label>
+                            <input type="text" id="v4_r_matloob" placeholder="مطلوب اور اس کی ماں کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
+                        </div>
+                    </div>
+
+                    <div id="v4_form_sharakat" class="hidden space-y-2">
+                        <p class="text-yellow-400 font-bold mb-1">حساب شراکت و لین دین و دوست</p>
+                        <div>
+                            <label class="block mb-1">طالب کا نام:</label>
+                            <input type="text" id="v4_s_talib" placeholder="طالب کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
+                        </div>
+                        <div>
+                            <label class="block mb-1">مطلوب / دوست کا نام:</label>
+                            <input type="text" id="v4_s_matloob" placeholder="دوست يا شراکت دار کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
+                        </div>
+                    </div>
+
+                    <div id="v4_form_city" class="hidden space-y-2">
+                        <p class="text-yellow-400 font-bold mb-1">حسابِ موافقتِ علاقہ و شہر</p>
+                        <div>
+                            <label class="block mb-1">سائل / طالب کا نام:</label>
+                            <input type="text" id="v4_c_talib" placeholder="اپنا نام لکھیں..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
+                        </div>
+                        <div>
+                            <label class="block mb-1">علاقہ یا شہر کا نام:</label>
+                            <input type="text" id="v4_c_city" placeholder="شہر یا علاقے کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
+                        </div>
+                    </div>
+
+                    <button onclick="v4_calculate()" class="w-full py-2 bg-green-600 hover:bg-green-500 text-black font-bold text-xs rounded mt-2">
+                        حساب لگائیں
+                    </button>
+                </div>
+
+                <div id="v4_resultBox" class="hidden p-3 bg-black/60 border border-yellow-600/50 rounded space-y-2 text-xs">
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-1">
+                        <span class="font-bold text-yellow-400" id="v4_resTitle">تفصیلِ آپسی تعلقات:</span>
+                        <button onclick="copyToClipboard(document.getElementById('v4_resText').innerText)" class="px-2 py-0.5 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی کریں</button>
+                    </div>
+                    <p id="v4_resText" class="text-yellow-200 leading-relaxed font-sans">--</p>
+                </div>
+
+                <button onclick="document.getElementById('v4_compGrid').classList.toggle('hidden')" class="w-full py-1.5 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 font-semibold text-xs rounded">
+                    👁 نتائج طالب و مطلوب دیکھیں / چھپائیں
+                </button>
+
+                <div id="v4_compGrid" class="hidden p-3 bg-black/60 border border-gray-800 rounded text-xs space-y-2 font-mono">
+                    <div class="grid grid-cols-3 text-center border-b border-gray-800 pb-1 font-bold text-yellow-400">
+                        <div>تفصیل</div> <div>طالب</div> <div>مطلوب / شہر</div>
+                    </div>
+                    <div class="grid grid-cols-3 text-center border-b border-gray-800/50 py-1">
+                        <span>اعداد</span> <span id="v4_g_t_abjad" class="text-yellow-300">0</span> <span id="v4_g_m_abjad" class="text-yellow-300">0</span>
+                    </div>
+                    <div class="grid grid-cols-3 text-center border-b border-gray-800/50 py-1">
+                        <span>برج (کسر)</span> <span id="v4_g_t_burj" class="text-green-400">--</span> <span id="v4_g_m_burj" class="text-green-400">--</span>
+                    </div>
+                    <div class="grid grid-cols-3 text-center border-b border-gray-800/50 py-1">
+                        <span>حاکم سیارہ</span> <span id="v4_g_t_planet" class="text-blue-400">--</span> <span id="v4_g_m_planet" class="text-blue-400">--</span>
+                    </div>
+                    <div class="grid grid-cols-3 text-center py-1">
+                        <span>عنصر</span> <span id="v4_g_t_elem" class="text-red-400">--</span> <span id="v4_g_m_elem" class="text-red-400">--</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 5 PLACEHOLDER -->
+        <!-- SECTION 5: تشخیص -->
         <div id="sec5" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 5 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">تشخیص بذریعہ علم الاعداد و نجوم</h2>
+                
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block mb-1">مریض کا نام معہ والدہ:</label>
+                        <input type="text" id="v5_masees" placeholder="مریض اور اس کی ماں کا نام..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block mb-1">قمری تاریخ (1 تا 30):</label>
+                            <input type="number" id="v5_date" min="1" max="30" value="14" class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300">
+                        </div>
+                        <div>
+                            <label class="block mb-1">دن کا انتخاب کریں:</label>
+                            <select id="v5_day" class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300">
+                                <option value="اتوار">اتوار</option>
+                                <option value="پیر">پیر</option>
+                                <option value="منگل">منگل</option>
+                                <option value="بدھ">بدھ</option>
+                                <option value="جمعرات">جمعرات</option>
+                                <option value="جمعہ">جمعہ</option>
+                                <option value="ہفتہ">ہفتہ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="v5_calculate()" class="w-full py-2 bg-yellow-600 text-black font-bold text-xs rounded">تشخیص کریں</button>
+                </div>
+
+                <div id="v5_resBox" class="hidden p-3 bg-black/60 border border-yellow-600/50 rounded text-xs space-y-2">
+                    <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">حتمی تشخیصی حکم:</p>
+                    <p id="v5_resText" class="text-green-400 font-bold leading-relaxed">--</p>
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 6 PLACEHOLDER -->
+        <!-- SECTION 6: میزان الحروف -->
         <div id="sec6" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 6 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">میزان الحروف فی العناصر والطبائع</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">طالب کا نام:</label>
+                        <input type="text" id="v6_talib" oninput="v6_calculate()" placeholder="علی..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">مطلوب کا نام:</label>
+                        <input type="text" id="v6_matloob" oninput="v6_calculate()" placeholder="نوید..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                </div>
+
+                <div class="p-3 bg-black/60 border border-yellow-600/40 rounded text-xs space-y-2">
+                    <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">درجاتِ عناصرِ اربعہ (توازن و دقیقہ)</p>
+                    <div class="grid grid-cols-4 gap-1 text-center font-mono">
+                        <div class="p-1.5 bg-red-950/40 border border-red-800/40 rounded">
+                            <span class="block text-red-400 font-bold">آتش</span>
+                            <span id="v6_atish" class="text-yellow-300">0 مرتبے</span>
+                        </div>
+                        <div class="p-1.5 bg-yellow-950/40 border border-yellow-800/40 rounded">
+                            <span class="block text-yellow-400 font-bold">باد</span>
+                            <span id="v6_baad" class="text-yellow-300">0 مرتبے</span>
+                        </div>
+                        <div class="p-1.5 bg-blue-950/40 border border-blue-800/40 rounded">
+                            <span class="block text-blue-400 font-bold">آب</span>
+                            <span id="v6_aab" class="text-yellow-300">0 مرتبے</span>
+                        </div>
+                        <div class="p-1.5 bg-amber-950/40 border border-amber-800/40 rounded">
+                            <span class="block text-amber-500 font-bold">خاک</span>
+                            <span id="v6_khaak" class="text-yellow-300">0 مرتبے</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-black/60 border border-gray-800 rounded text-xs space-y-2 font-mono">
+                    <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">کیفیاتِ اربعہ (جمع و نفی کے بعد موازنہ)</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
+                        <div class="p-1.5 bg-black rounded border border-gray-800">
+                            <span class="block text-gray-400">حرارت (گرمی):</span>
+                            <b id="v6_garmi" class="text-yellow-400">0%</b>
+                        </div>
+                        <div class="p-1.5 bg-black rounded border border-gray-800">
+                            <span class="block text-gray-400">برودت (سردی):</span>
+                            <b id="v6_sardi" class="text-blue-400">0%</b>
+                        </div>
+                        <div class="p-1.5 bg-black rounded border border-gray-800">
+                            <span class="block text-gray-400">رطوبت (تری):</span>
+                            <b id="v6_tari" class="text-green-400">0%</b>
+                        </div>
+                        <div class="p-1.5 bg-black rounded border border-gray-800">
+                            <span class="block text-gray-400">یبوست (خشکی):</span>
+                            <b id="v6_khushki" class="text-amber-400">0%</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-yellow-900/30 border border-yellow-600/50 rounded text-center space-y-1.5">
+                    <p class="text-xs text-yellow-400 font-bold">حتمی نتیجہ و طبعی غلبہ</p>
+                    <div id="v6_verdict" class="text-sm font-bold text-green-400">نام درج کریں...</div>
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 7 PLACEHOLDER -->
+        <!-- SECTION 7: قانونِ طلسم التعجیب -->
         <div id="sec7" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 7 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">قانونِ طلسم التعجیب</h2>
+                
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">اسم / آیت / سورت لکھیں:</label>
+                        <input type="text" id="v7_ism" oninput="v7_calculate()" placeholder="مثال: اللہ، بسم اللہ الرحمن الرحیم..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">مقصد کا جملہ لکھیں:</label>
+                        <input type="text" id="v7_purpose" oninput="v7_calculate()" placeholder="مثال: یا اللہ میرے رزق میں اضافہ فرما..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-xs font-mono">
+                    <div class="p-2.5 bg-black/60 border border-yellow-600/50 rounded flex justify-between items-center">
+                        <div>
+                            <span class="block text-gray-400 text-[10px]">طلسماتی عددی کوڈ:</span>
+                            <b id="v7_outNum" class="text-yellow-400 text-sm tracking-wider">00000000000</b>
+                        </div>
+                        <button onclick="copyToClipboard(document.getElementById('v7_outNum').innerText)" class="px-2 py-1 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی</button>
+                    </div>
+
+                    <div class="p-2.5 bg-black/60 border border-yellow-600/50 rounded flex justify-between items-center">
+                        <div>
+                            <span class="block text-gray-400 text-[10px]">حروفِ طلسم / مستخرجہ:</span>
+                            <b id="v7_outHuruf" class="text-green-400 text-sm tracking-widest">--</b>
+                        </div>
+                        <button onclick="copyToClipboard(document.getElementById('v7_outHuruf').innerText)" class="px-2 py-1 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی</button>
+                    </div>
+
+                    <div class="p-2.5 bg-black/60 border border-gray-800 rounded">
+                        <span class="block text-gray-400 text-[10px] mb-1">بسطِ حرفی کا نچوڑ:</span>
+                        <p id="v7_outBast" class="text-yellow-200 tracking-widest leading-relaxed">--</p>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-yellow-900/30 border border-yellow-600/40 rounded text-[11px] leading-relaxed">
+                    <strong>⚠ ضروری ہدایت:</strong> ان حاصل شدہ حروف کو طلسم کے گرد 3 بار گول دائرے میں لکھیں اور اپنے مقصد کے عنصر کے مطابق استعمال میں لائیں۔
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 8 PLACEHOLDER -->
+        <!-- SECTION 8: مخفی قوانین (14) -->
         <div id="sec8" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 8 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">مخفی قوانینِ طلسماتِ روحانی</h2>
+                
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">اسم / آیت / سورت لکھیں:</label>
+                        <input type="text" id="v8_ism" oninput="v8_calculate()" placeholder="مثال: نور، یا فتاح..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">مقصد کا جملہ لکھیں:</label>
+                        <input type="text" id="v8_purpose" oninput="v8_calculate()" placeholder="مثال: یا فتاح اسرار باطن..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                </div>
+
+                <div class="text-xs">
+                    <label class="block font-bold text-yellow-400 mb-1">مقصد کے موافق قانون کا انتخاب کریں:</label>
+                    <select id="v8_lawSelect" onchange="v8_calculate()" class="w-full p-2 bg-black/80 border border-yellow-600/60 rounded text-yellow-300 font-semibold">
+                        <option value="1">1. قانون سکون و حرکت</option>
+                        <option value="2">2. قانون فعل امر و مضارع</option>
+                        <option value="3">3. قانون فعل امر (الگ)</option>
+                        <option value="4">4. قانون مستقر و مستودع</option>
+                        <option value="5">5. قانون مہیمن و مسیطر</option>
+                        <option value="6">6. قانون فتح القفل</option>
+                        <option value="7">7. قانون مغلاق و مفتاح</option>
+                        <option value="8">8. قانون السماء و الأرض</option>
+                        <option value="9">9. قانون الجاذبیہ</option>
+                        <option value="10">10. قانون مفتاح الغیب</option>
+                        <option value="11">11. قانون ظہور الباطن المخفی</option>
+                        <option value="12">12. قانون الاختفاء</option>
+                        <option value="13">13. قانون التعجیب</option>
+                        <option value="14">14. قانون طلسم التسخیر</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-center text-xs font-mono">
+                    <div class="p-2 bg-black/60 border border-gray-800 rounded">
+                        <span id="v8_col1_label" class="block text-gray-400 text-[10px]">فعل امر / حاکم:</span>
+                        <b id="v8_col1_val" class="text-yellow-400 text-sm">0</b>
+                    </div>
+                    <div class="p-2 bg-black/60 border border-gray-800 rounded">
+                        <span id="v8_col2_label" class="block text-gray-400 text-[10px]">فعل مضارع / جاری:</span>
+                        <b id="v8_col2_val" class="text-green-400 text-sm">0</b>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-black/60 border border-yellow-600/50 rounded text-center space-y-1">
+                    <span class="text-xs text-yellow-400 font-bold block">طلسمِ مقصد (ضربی):</span>
+                    <b id="v8_outMult" class="text-green-400 font-mono text-base tracking-wider block">00000000</b>
+                </div>
+
+                <div class="p-3 bg-yellow-900/20 border border-yellow-600/30 rounded text-xs space-y-1.5 leading-relaxed">
+                    <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">قوانین کی وضاحت:</p>
+                    <p id="v8_lawDesc" class="text-gray-200">
+                        کسی بھی چیز (اسم، حرف، عدد یا شے) کی اندرونی اور ظاہری طاقت کو جاننے کا قانون۔
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <!-- SECTION 9 PLACEHOLDER -->
+        <!-- SECTION 9: قانونِ شمع -->
         <div id="sec9" class="tab-content hidden">
-            <p class="text-center text-xs text-gray-500 py-8">سیکشن 9 کا کوڈ اگلی مرحلے میں یہاں آئے گا...</p>
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">مجموعہ طلسماتِ قانونِ شمع</h2>
+                
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">اسم / آیت / سورت درج کریں:</label>
+                        <input type="text" id="v9_ism" oninput="v9_calculate()" placeholder="مثال: بسم اللہ الرحمن الرحیم..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">طالب / مطلوب کا نام درج کریں:</label>
+                        <input type="text" id="v9_names" oninput="v9_calculate()" placeholder="مثال: رحیم، علی..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+                </div>
+
+                <div class="text-xs">
+                    <label class="block font-bold text-yellow-400 mb-1">قانونِ شمع کا انتخاب کریں:</label>
+                    <select id="v9_lawSelect" onchange="v9_calculate()" class="w-full p-2 bg-black/80 border border-yellow-600/60 rounded text-yellow-300 font-semibold">
+                        <option value="1">قانون نمبر 1 (جلب و تسخیر)</option>
+                        <option value="2">قانون نمبر 2 (محبتِ شدید)</option>
+                        <option value="3">قانون نمبر 3 (احراق و بیقراری)</option>
+                        <option value="4">قانون نمبر 4 (تطہیر و تسخیرِ قلوب)</option>
+                        <option value="5">قانون نمبر 5 (عطوف و مطیع)</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col items-center justify-center p-4 bg-black/80 border border-gray-800 rounded relative overflow-hidden">
+                    <div class="w-6 h-8 bg-gradient-to-t from-yellow-500 via-orange-500 to-red-500 rounded-full blur-[1px] animate-pulse mb-1"></div>
+                    <div class="w-28 bg-red-700 border-2 border-red-900 rounded-t-sm p-3 min-h-[140px] flex flex-col items-center justify-center text-center shadow-2xl relative">
+                        <p id="v9_candleText" class="writing-mode-vertical text-yellow-300 font-mono text-xs font-bold tracking-widest leading-loose">
+                            زفدگکہ...<br>۲۸۳۹۱۲۸۰۷۳۱۹۵۰۰
+                        </p>
+                    </div>
+                    <div class="w-36 h-3 bg-red-900 rounded-b-md shadow-md"></div>
+                </div>
+
+                <div class="p-3 bg-black/80 border border-yellow-600/40 rounded space-y-1 text-xs font-mono">
+                    <span class="block text-yellow-400 font-bold border-b border-gray-800 pb-1">عزیمتِ شمع:</span>
+                    <p id="v9_azimat" class="text-green-400 leading-relaxed text-[11px]">
+                        توكلوا بگذا وبگذا بحق الآية التي دخلتم بها، وإنه لقسم لو تعلمون عظیم بارك الله فيكم وعليكم، الوُحَا العَجَلَ السَّاعَةَ۔
+                    </p>
+                </div>
+
+                <button onclick="copyToClipboard(document.getElementById('v9_azimat').innerText)" class="w-full py-2 bg-yellow-600 hover:bg-yellow-500 text-black font-bold text-xs rounded shadow">
+                    عزیمت کاپی کریں
+                </button>
+            </div>
         </div>
 
     </main>
 
-    <!-- Core App Engine Script -->
+    <!-- Global App Engine JavaScript -->
     <script>
-        // Tab Switcher
+        const V1_ABJAD = {'ا':1,'ب':2,'ج':3,'د':4,'ہ':5,'و':6,'ز':7,'ح':8,'ط':9,'ی':10,'ک':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000};
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+            document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('bg-yellow-600', 'text-black'); el.classList.add('bg-black/60', 'text-yellow-400'); });
             document.getElementById(tabId).classList.remove('hidden');
-            document.getElementById(tabId).classList.add('block');
+            document.getElementById('tab_' + tabId).classList.add('bg-yellow-600', 'text-black');
         }
 
-        // Theme Switcher
-        function changeTheme(themeClass) {
-            document.getElementById('appBody').className = themeClass + ' min-h-screen pb-12 transition-colors duration-300';
-        }
-
-        // Copy Helper
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text);
-            alert('کامیابی سے کاپی ہو گیا!');
-        }
-
-        // Section 1 Calculation Logic
-        const V1_ABJAD = {'ا':1,'ب':2,'ج':3,'د':4,'ہ':5,'و':6,'ز':7,'ح':8,'ط':9,'ی':10,'ک':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000};
-        
-        function v1_calcVal(text) {
-            let clean = text.replace(/[^آ-غی]/g, '');
-            let sum = 0;
-            for(let c of clean) if(V1_ABJAD[c]) sum += V1_ABJAD[c];
-            return sum;
-        }
+        function changeTheme(cls) { document.getElementById('appBody').className = cls + ' min-h-screen pb-12 transition-colors duration-300'; }
+        function copyToClipboard(txt) { navigator.clipboard.writeText(txt); alert('کامیابی سے کاپی ہو گیا!'); }
+        function v1_calcVal(txt) { let clean = txt.replace(/[^آ-غی]/g, ''); let sum = 0; for(let c of clean) if(V1_ABJAD[c]) sum += V1_ABJAD[c]; return sum; }
 
         function v1_numToHuruf(num) {
             let str = num.toString();
@@ -208,6 +656,7 @@
             return res;
         }
 
+        // Section 1 Logic
         function v1_calculate() {
             let t = document.getElementById('v1_talib').value;
             let m = document.getElementById('v1_matloob').value;
@@ -226,594 +675,370 @@
             document.getElementById('v1_totalAbjad').innerText = total;
             document.getElementById('v1_finalMuwakkil').innerText = total ? `${v1_numToHuruf(total)}${suf}` : '--';
         }
+
+        // Section 2 Logic
+        function v2_calculate() {
+            let n = document.getElementById('v2_name').value;
+            let p = document.getElementById('v2_purpose').value;
+            let clean = (n + p).replace(/[^آ-غی]/g, '');
+
+            if (!clean) {
+                document.getElementById('v2_outCore').innerText = '--';
+                document.getElementById('v2_abjad').innerText = '0';
+                document.getElementById('v2_single').innerText = '0';
+                document.getElementById('v2_zabar').innerText = '0';
+                document.getElementById('v2_bayyanat').innerText = '0';
+                document.getElementById('v2_bast').innerText = '--';
+                document.getElementById('v2_svgText').textContent = 'اصل طلسم • اصل طلسم •';
+                return;
+            }
+
+            let kabeer = v1_calcVal(clean);
+            let single = (kabeer % 9) || 9;
+            let spaced = clean.split('').join(' ');
+
+            document.getElementById('v2_outCore').innerText = spaced;
+            document.getElementById('v2_abjad').innerText = kabeer;
+            document.getElementById('v2_single').innerText = single;
+            document.getElementById('v2_zabar').innerText = Math.floor(kabeer * 0.4);
+            document.getElementById('v2_bayyanat').innerText = Math.ceil(kabeer * 0.6);
+            document.getElementById('v2_bast').innerText = spaced;
+            document.getElementById('v2_svgText').textContent = spaced + ' • ' + spaced + ' •';
+        }
+
+        // Section 3 Logic
+        let v3_selectedDate = new Date();
+        const v3_planets = [
+            { name: 'زہرہ ♀', type: 'سعد اتصالِ نکاح', color: 'text-green-400' },
+            { name: 'عطارد ☿', type: 'ممزوجِ طلسم', color: 'text-yellow-400' },
+            { name: 'قمر ☽', type: 'نحسِ محض', color: 'text-red-400' },
+            { name: 'زحل ♄', type: 'سعد اتصالِ محبت', color: 'text-green-400' },
+            { name: 'مشتری ♃', type: 'سعد اتصالِ جاؤ و جلال', color: 'text-green-400' },
+            { name: 'مریخ ♂', type: 'نحسِ بغض', color: 'text-red-400' },
+            { name: 'شمس ☉', type: 'سعدِ جامع', color: 'text-green-400' }
+        ];
+
+        function v3_updateClock() {
+            const d = new Date();
+            document.getElementById('v3_liveClock').innerText = d.toLocaleTimeString('ur-PK');
+        }
+        setInterval(v3_updateClock, 1000);
+        v3_updateClock();
+
+        function v3_changeDate(days) {
+            v3_selectedDate.setDate(v3_selectedDate.getDate() + days);
+            v3_updateData();
+        }
+
+        function v3_resetDate() {
+            v3_selectedDate = new Date();
+            v3_updateData();
+        }
+
+        function v3_updateRuling() {
+            const topic = document.getElementById('v3_topicSelect').value;
+            const rulings = {
+                'عشق': 'عشق و محبت، مطیع کرنا، عورت کے حصول کا سوال کے لیے موافق و سعد ساعت ہے۔',
+                'مال': 'تجارت، کاروبار اور فتح و برکت کے لیے مبارک وقت ہے۔',
+                'دشمن': 'دشمن پر غلبہ اور دفعِ شر کی بندش کے لیے نحس ساعت منتخب کریں۔',
+                'صحت': 'شفائے امراض اور تعویذِ صحت کے لیے بہترین ساعت ہے۔',
+                'سفر': 'سفر و ہجرت اور نئے کام کی شروعات کے لیے موافق ہے۔'
+            };
+            document.getElementById('v3_rulingText').innerText = rulings[topic] || rulings['عشق'];
+        }
+
+        function v3_updateData() {
+            let gridHtml = '';
+            for(let i = 1; i <= 24; i++) {
+                let p = v3_planets[(i - 1) % 7];
+                let startH = (i + 5) % 12 || 12;
+                let endH = (i + 6) % 12 || 12;
+                let period = i <= 12 ? 'AM' : 'PM';
+                
+                gridHtml += `
+                    <div class="flex justify-between items-center p-1.5 bg-black/60 border border-gray-800 rounded">
+                        <div>
+                            <span class="text-yellow-500 font-bold">ساعت ${i}:</span> 
+                            <span class="font-bold">${p.name}</span>
+                        </div>
+                        <div class="text-[10px] opacity-80">${startH}:00 ${period} - ${endH}:00 ${period}</div>
+                        <div class="${p.color} font-bold text-[10px]">${p.type}</div>
+                    </div>
+                `;
+            }
+            document.getElementById('v3_saatGrid').innerHTML = gridHtml;
+        }
+        v3_updateData();
+
+        // Section 4 Logic
+        let v4_currentMode = 'rishta';
+        function v4_selectMode(mode) {
+            v4_currentMode = mode;
+            ['rishta', 'sharakat', 'city'].forEach(m => {
+                document.getElementById(`v4_form_${m}`).classList.add('hidden');
+                document.getElementById(`v4_btn_${m}`).className = "p-2 rounded border border-gray-700 bg-black/60 text-yellow-400";
+            });
+            document.getElementById(`v4_form_${mode}`).classList.remove('hidden');
+            document.getElementById(`v4_btn_${mode}`).className = "p-2 rounded border border-yellow-600 bg-yellow-600 text-black font-bold";
+        }
+
+        const v4_burjList = [
+            { name: 'حمل', planet: 'مریخ', elem: 'آتشی' },
+            { name: 'ثور', planet: 'زہرہ', elem: 'خاکی' },
+            { name: 'جوزا', planet: 'عطارد', elem: 'بادی' },
+            { name: 'سرطان', planet: 'قمر', elem: 'آبی' },
+            { name: 'اسد', planet: 'شمس', elem: 'آتشی' },
+            { name: 'سنبلہ', planet: 'عطارد', elem: 'خاکی' },
+            { name: 'میزان', planet: 'زہرہ', elem: 'بادی' },
+            { name: 'عقرب', planet: 'مریخ', elem: 'آبی' },
+            { name: 'قوس', planet: 'مشتری', elem: 'آتشی' },
+            { name: 'جدی', planet: 'زحل', elem: 'خاکی' },
+            { name: 'دلو', planet: 'زحل', elem: 'بادی' },
+            { name: 'حوت', planet: 'مشتری', elem: 'آبی' }
+        ];
+
+        function v4_calculate() {
+            let tName = '', mName = '';
+            if (v4_currentMode === 'rishta') {
+                tName = document.getElementById('v4_r_talib').value;
+                mName = document.getElementById('v4_r_matloob').value;
+            } else if (v4_currentMode === 'sharakat') {
+                tName = document.getElementById('v4_s_talib').value;
+                mName = document.getElementById('v4_s_matloob').value;
+            } else {
+                tName = document.getElementById('v4_c_talib').value;
+                mName = document.getElementById('v4_c_city').value;
+            }
+
+            let sumT = v1_calcVal(tName);
+            let sumM = v1_calcVal(mName);
+
+            if (!sumT || !sumM) {
+                alert('براہِ کرم دونوں خانے صحیح طور پر پر کریں!');
+                return;
+            }
+
+            let bT = v4_burjList[(sumT % 12) || 11];
+            let bM = v4_burjList[(sumM % 12) || 11];
+
+            document.getElementById('v4_g_t_abjad').innerText = sumT;
+            document.getElementById('v4_g_m_abjad').innerText = sumM;
+            document.getElementById('v4_g_t_burj').innerText = bT.name;
+            document.getElementById('v4_g_m_burj').innerText = bM.name;
+            document.getElementById('v4_g_t_planet').innerText = bT.planet;
+            document.getElementById('v4_g_m_planet').innerText = bM.planet;
+            document.getElementById('v4_g_t_elem').innerText = bT.elem;
+            document.getElementById('v4_g_m_elem').innerText = bM.elem;
+
+            let text = '';
+            if (v4_currentMode === 'rishta') {
+                document.getElementById('v4_resTitle').innerText = 'تفصیلِ آپسی تعلقات:';
+                text = `ان دونوں طالعوں (${bT.name} بمقابلہ ${bM.name}) میں کبھی موافقت اور کبھی مخالفت رہے گی، جھگڑا بھی ہو سکتا ہے۔ ننانوے نام باری تعالیٰ کی لوح ہمراہ رکھیں تو آفت و بلا سے محفوظ رہیں گے۔`;
+            } else if (v4_currentMode === 'sharakat') {
+                document.getElementById('v4_resTitle').innerText = 'تفصیلِ شراکت و دوستی:';
+                text = `اس شخص کے ساتھ محتاط ہو کر زندگی کے معاملات طے کریں۔ یہ بندہ آپ کو دھوکہ دے سکتا ہے یا آپ اس پر بھروسہ کر کے ناقابلِ تلافی نقصان اٹھا سکتے ہیں۔`;
+            } else {
+                document.getElementById('v4_resTitle').innerText = 'حکم و نتیجہ (علاقہ و شہر):';
+                text = `یہ علاقہ (${mName}) آپ کے لیے بالکل موافق ہے، یہاں سے ہجرت نہ کریں۔ یہاں آپ کو عزت اور رزق حاصل ہو گا۔`;
+            }
+
+            document.getElementById('v4_resText').innerText = text;
+            document.getElementById('v4_resultBox').classList.remove('hidden');
+        }
+
+        // Section 5 Logic
+        function v5_calculate() {
+            let masees = document.getElementById('v5_masees').value;
+            let date = parseInt(document.getElementById('v5_date').value) || 1;
+            let day = document.getElementById('v5_day').value;
+
+            let val = v1_calcVal(masees);
+            if (!val) {
+                alert('براہِ کرم مریض کا نام درج کریں!');
+                return;
+            }
+
+            let totalSum = val + date;
+            let rem7 = totalSum % 7;
+            let rem3 = totalSum % 3;
+
+            let diagnosis = '';
+            if (rem3 === 1) diagnosis = "مریض پر نظرِ بد اور حاسدین کا اثر ہے۔ صدقہ دیجیے اور سورۃ الفلق اور الناص کا دم کریں۔";
+            else if (rem3 === 2) diagnosis = "مریض پر سفلی عملیات یا بندش کا اثر ہے۔ نقشِ نادِ علیؑ اور پانی پر دم کر کے پلانا مفید ہے۔";
+            else diagnosis = "مرض جسمانی اور طبی نوعیت کا ہے۔ روحانی علاج کے ساتھ ساتھ ماہر طبیب یا ڈاکٹر سے رجوع فرمائیں۔";
+
+            document.getElementById('v5_resText').innerText = diagnosis;
+            document.getElementById('v5_resBox').classList.remove('hidden');
+        }
+
+        // Section 6 Logic
+        function v6_calculate() {
+            let t = document.getElementById('v6_talib').value;
+            let m = document.getElementById('v6_matloob').value;
+            let combined = (t + m).replace(/[^آ-غی]/g, '');
+
+            if (!combined) {
+                document.getElementById('v6_atish').innerText = '0 مرتبے';
+                document.getElementById('v6_baad').innerText = '0 مرتبے';
+                document.getElementById('v6_aab').innerText = '0 مرتبے';
+                document.getElementById('v6_khaak').innerText = '0 مرتبے';
+                document.getElementById('v6_garmi').innerText = '0%';
+                document.getElementById('v6_sardi').innerText = '0%';
+                document.getElementById('v6_tari').innerText = '0%';
+                document.getElementById('v6_khushki').innerText = '0%';
+                document.getElementById('v6_verdict').innerText = 'نام درج کریں...';
+                return;
+            }
+
+            let atish = 0, baad = 0, aab = 0, khaak = 0;
+            for (let c of combined) {
+                if ('اھطمفشذ'.includes(c)) atish++;
+                else if ('بوینصتض'.includes(c)) baad++;
+                else if ('جزکلثخظ'.includes(c)) aab++;
+                else if ('دہرسمعرغ'.includes(c)) khaak++;
+            }
+
+            document.getElementById('v6_atish').innerText = `${atish} مرتبے`;
+            document.getElementById('v6_baad').innerText = `${baad} مرتبے`;
+            document.getElementById('v6_aab').innerText = `${aab} مرتبے`;
+            document.getElementById('v6_khaak').innerText = `${khaak} مرتبے`;
+
+            let tari = (baad * 3.5 + aab * 2.0).toFixed(1);
+            let garmi = (atish * 2.5).toFixed(1);
+            let khushki = (khaak * 2.0).toFixed(1);
+            let sardi = (aab * 1.0).toFixed(1);
+
+            document.getElementById('v6_tari').innerText = `${tari}%`;
+            document.getElementById('v6_garmi').innerText = `${garmi}%`;
+            document.getElementById('v6_khushki').innerText = `${khushki}%`;
+            document.getElementById('v6_sardi').innerText = `${sardi}%`;
+
+            let maxElem = 'باد';
+            if (atish >= baad && atish >= aab && atish >= khaak) maxElem = 'آتش';
+            else if (aab >= atish && aab >= baad && aab >= khaak) maxElem = 'آب';
+            else if (khaak >= atish && khaak >= baad && khaak >= aab) maxElem = 'خاک';
+
+            document.getElementById('v6_verdict').innerText = `طبعی غلبہ تری ہے — عنصر ${maxElem} غالب ہے`;
+        }
+
+        // Section 7 Logic
+        function v7_calculate() {
+            let ism = document.getElementById('v7_ism').value.replace(/[^آ-غی]/g, '');
+            let pur = document.getElementById('v7_purpose').value.replace(/[^آ-غی]/g, '');
+
+            if (!ism && !pur) {
+                document.getElementById('v7_outNum').innerText = '00000000000';
+                document.getElementById('v7_outHuruf').innerText = '--';
+                document.getElementById('v7_outBast').innerText = '--';
+                return;
+            }
+
+            let ismVal = v1_calcVal(ism);
+            let purVal = v1_calcVal(pur);
+
+            let numCode = (ismVal * 777 + purVal * 1111).toString();
+            if (numCode === '0') numCode = '27705951655200';
+
+            let hurufMap = {'1':'ا','2':'ب','3':'ج','4':'د','5':'ہ','6':'و','7':'ز','8':'ح','9':'ط','0':'ی'};
+            let extractedHuruf = '';
+            for (let d of numCode) extractedHuruf += (hurufMap[d] || '') + ' ';
+
+            let bastText = (ism + pur).split('').join(' ');
+
+            document.getElementById('v7_outNum').innerText = numCode;
+            document.getElementById('v7_outHuruf').innerText = extractedHuruf.trim();
+            document.getElementById('v7_outBast').innerText = bastText || '--';
+        }
+
+        // Section 8 Logic
+        const v8_lawDetails = {
+            '1': { col1: 'سکون', col2: 'حرکت', desc: '(سکون) طاقت کا چھپا ہوا یا غیر فعال ہونا۔ (حرکت) طاقت کا ظاہر ہونا یا اثر کرنا۔' },
+            '2': { col1: 'فعل امر', col2: 'فعل مضارع', desc: '(فعل امر) حکم دینے کی طاقت۔ (فعل مضارع) جاری حرکت یا اثر کی طاقت۔' },
+            '3': { col1: 'فعل امر (الگ)', col2: 'امراک', desc: 'کسی لفظ یا اسم کو حکم کی شکل دینا (الگ سے اس کی آمری قوت معلوم کرنا)۔' },
+            '4': { col1: 'مستقر', col2: 'مستودع', desc: 'قائم رہنے والی اور امانت رکھی جانے والی طاقت کا توازن۔' },
+            '5': { col1: 'مہیمن', col2: 'مسیطر', desc: 'نگہبانی اور مکمل تسلط قائم کرنے والا قانون۔' },
+            '6': { col1: 'فتح', col2: 'قفل', desc: 'کسی بھی بندش کو کھولنے یا مقفل کرنے کا قوت کا قانون۔' },
+            '7': { col1: 'مغلاق', col2: 'مفتاح', desc: '(مغلاق) بند کرنے والی قوت۔ (مفتاح) کھولنے والی قوت۔' },
+            '8': { col1: 'السماء', col2: 'الأرض', desc: 'علوی و سفلی قوتوں کو باہم ملا کر طلسم تیار کرنے کا قانون۔' },
+            '9': { col1: 'جاذبہ', col2: 'دافعہ', desc: 'اپنی طرف کھینچنے (کشش) اور دور ہٹانے کی طاقت کا حساب۔' },
+            '10': { col1: 'مفتاح الغیب', col2: 'مغلاق الغیب', desc: 'غیبی فتوحات اور مخفی اسرار کو ظاہر کرنے کی کلید۔' },
+            '11': { col1: 'ظہور الباطن', col2: 'خفاء الظاہر', desc: 'پوشیدہ اثرات کو ظاہر کرنے اور ظاہری چیز کو مخفی کرنے کا قانون۔' },
+            '12': { col1: 'اختفاء', col2: 'تجلی', desc: 'حفاظت و بندش برائے اختفاء اور نظروں سے اوجھل کرنا۔' },
+            '13': { col1: 'تعجیب', col2: 'تکثیر', desc: 'حیرت انگیز اثرات پیدا کرنے اور حروف کی کثرت کا قانون۔' },
+            '14': { col1: 'تسخیر', col2: 'انقیاد', desc: 'قلوب کو مسخر کرنے اور مطیع بنانے کی مکمل قوت۔' }
+        };
+
+        function v8_calculate() {
+            let ism = document.getElementById('v8_ism').value.replace(/[^آ-غی]/g, '');
+            let pur = document.getElementById('v8_purpose').value.replace(/[^آ-غی]/g, '');
+            let lawId = document.getElementById('v8_lawSelect').value;
+
+            let info = v8_lawDetails[lawId] || v8_lawDetails['1'];
+
+            document.getElementById('v8_col1_label').innerText = info.col1 + ':';
+            document.getElementById('v8_col2_label').innerText = info.col2 + ':';
+            document.getElementById('v8_lawDesc').innerText = info.desc;
+
+            if (!ism && !pur) {
+                document.getElementById('v8_col1_val').innerText = '0';
+                document.getElementById('v8_col2_val').innerText = '0';
+                document.getElementById('v8_outMult').innerText = '00000000';
+                return;
+            }
+
+            let ismVal = v1_calcVal(ism);
+            let purVal = v1_calcVal(pur);
+
+            let val1 = Math.floor(ismVal * (parseInt(lawId) + 2) * 1.5);
+            let val2 = Math.floor(purVal * (parseInt(lawId) + 1) * 2.2);
+            let mult = (ismVal || 12) * (purVal || 88) * parseInt(lawId) * 777;
+
+            document.getElementById('v8_col1_val').innerText = val1;
+            document.getElementById('v8_col2_val').innerText = val2;
+            document.getElementById('v8_outMult').innerText = mult.toString();
+        }
+
+        // Section 9 Logic
+        function v9_calculate() {
+            let ism = document.getElementById('v9_ism').value.replace(/[^آ-غی]/g, '');
+            let names = document.getElementById('v9_names').value.replace(/[^آ-غی]/g, '');
+            let law = document.getElementById('v9_lawSelect').value;
+
+            if (!ism && !names) {
+                document.getElementById('v9_candleText').innerHTML = 'زفدگکہ...<br>۲۸۳۹۱۲۸۰۷۳۱۹۵۰۰';
+                return;
+            }
+
+            let ismVal = v1_calcVal(ism);
+            let namesVal = v1_calcVal(names);
+
+            let numStr = (ismVal * 888 + namesVal * 333 * parseInt(law)).toString();
+            let map = {'1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹','0':'۰'};
+            let easternNum = '';
+            for (let d of numStr) easternNum += (map[d] || d);
+
+            let hurufPart = (ism + names).substring(0, 6).split('').join('');
+            if (!hurufPart) hurufPart = 'ممممطاااا';
+
+            document.getElementById('v9_candleText').innerHTML = `${hurufPart}<br>${easternNum}`;
+        }
+
+        // PWA Installation Handler
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('pwaInstallBtn');
+            btn.classList.remove('hidden');
+            btn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') btn.classList.add('hidden');
+                    deferredPrompt = null;
+                }
+            });
+        });
     </script>
-</body><!-- SECTION 2: طلسم العظیم -->
-<div id="sec2" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">طلسم العظیم</h2>
-        
-        <!-- Inputs -->
-        <div class="space-y-3 text-sm">
-            <div>
-                <label class="block text-xs font-semibold mb-1">نام طالب معہ والدہ:</label>
-                <input type="text" id="v2_name" oninput="v2_calculate()" placeholder="مثال: علی بن فاطمہ..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold mb-1">مقصد لکھیں:</label>
-                <input type="text" id="v2_purpose" oninput="v2_calculate()" placeholder="مثال: یا اللہ میرے رزق میں برکت پیدا فرما..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-        </div>
-
-        <!-- Core Tilism Box -->
-        <div class="p-3 bg-black/60 border border-yellow-600/50 rounded text-xs space-y-2">
-            <div class="flex justify-between items-center border-b border-gray-800 pb-1">
-                <span class="font-bold text-yellow-400">اصل طلسم:</span>
-                <button onclick="copyToClipboard(document.getElementById('v2_outCore').innerText)" class="px-2 py-0.5 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی کریں</button>
-            </div>
-            <div id="v2_outCore" class="font-mono text-center text-sm text-green-400 font-bold tracking-wider py-1">--</div>
-        </div>
-
-        <!-- Expandable Details Button -->
-        <button onclick="document.getElementById('v2_detailsBox').classList.toggle('hidden')" class="w-full py-2 bg-yellow-600/20 border border-yellow-600/50 text-yellow-400 font-semibold text-xs rounded hover:bg-yellow-600/30">
-            تفصیلات دیکھیں / چھپائیں 👁
-        </button>
-
-        <!-- Expandable Details Grid -->
-        <div id="v2_detailsBox" class="hidden grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono bg-black/50 p-3 border border-gray-800 rounded">
-            <div class="p-1.5 bg-black/60 rounded flex justify-between">
-                <span>کل اعداد قمری:</span> <b id="v2_abjad" class="text-yellow-400">0</b>
-            </div>
-            <div class="p-1.5 bg-black/60 rounded flex justify-between">
-                <span>مفروع عدد (1 تا 9):</span> <b id="v2_single" class="text-yellow-400">0</b>
-            </div>
-            <div class="p-1.5 bg-black/60 rounded flex justify-between">
-                <span>زبر اعداد:</span> <b id="v2_zabar" class="text-yellow-400">0</b>
-            </div>
-            <div class="p-1.5 bg-black/60 rounded flex justify-between">
-                <span>بینات اعداد:</span> <b id="v2_bayyanat" class="text-yellow-400">0</b>
-            </div>
-            <div class="p-1.5 bg-black/60 rounded col-span-1 md:col-span-2">
-                <span>سطرِ بسطِ حرفی:</span> <b id="v2_bast" class="text-green-400 block mt-1">--</b>
-            </div>
-        </div>
-
-        <!-- Circular Diagram (SVG) -->
-        <div class="flex flex-col items-center justify-center p-3 bg-black/30 border border-gray-800 rounded">
-            <p class="text-[11px] text-yellow-500 mb-2 font-semibold">گول دائرہ بسطِ حرفی (3 بار تکرار - اندر سے باہر)</p>
-            <svg width="220" height="220" viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="85" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
-                <circle cx="100" cy="100" r="60" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="3"/>
-                <circle cx="100" cy="100" r="35" fill="none" stroke="#D4AF37" stroke-width="1"/>
-                <path id="v2_ringPath" d="M 15,100 A 85,85 0 1,1 185,100 A 85,85 0 1,1 15,100" fill="none"/>
-                <text font-size="9" fill="#D4AF37">
-                    <textPath href="#v2_ringPath" id="v2_svgText">اصل طلسم • اصل طلسم •</textPath>
-                </text>
-                <text x="100" y="104" font-size="10" fill="#a3e635" text-anchor="middle" font-weight="bold">اصل طلسم</text>
-            </svg>
-        </div>
-
-        <!-- Instruction -->
-        <div class="p-2.5 bg-yellow-900/30 border border-yellow-600/40 rounded text-[11px] leading-relaxed">
-            <strong>⚠ ضروری ہدایت:</strong> اپنے مقصد کو طلسم کے گرد گول دائرے میں بسطِ حرفی (الگ الگ حروف) کر کے تین بار لکھیں، پھر چاروں عناصر (پہننا، پینا، لٹکانا، جلانا/دفنانا) کے اعتبار سے استعمال میں لائیں۔
-        </div>
-    </div>
-</div>
-</html><!-- SECTION 3: ساعت النجم / ساعت الخبیر -->
-<div id="sec3" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">ساعت النجم (ساعت الخبیر)</h2>
-        
-        <!-- Live Clock & Current Saat Header -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-black/60 p-3 border border-yellow-600/50 rounded">
-            <div class="space-y-1 text-xs">
-                <p class="text-sm font-bold text-yellow-400">موجودہ ساعت: <span id="v3_currentSaatName" class="text-green-400 font-bold text-base">زہرہ (سعد)</span></p>
-                <p>وقت: <span id="v3_currentSaatTime" class="text-yellow-300">08:54 PM تا 09:46 PM</span></p>
-                <p>ساعت نمبر: <span id="v3_currentSaatNo" class="font-bold">رات کی ساعت 15</span></p>
-                <p class="text-xs text-red-400 font-mono mt-1">باقی وقت: <span id="v3_countdown">05 منٹ 30 سیکنڈ</span></p>
-            </div>
-            <div class="text-left font-mono border-t md:border-t-0 md:border-r border-gray-800 pt-2 md:pt-0 md:pr-3 space-y-1 text-xs">
-                <p class="text-yellow-500 font-bold text-sm" id="v3_liveClock">00:00:00 PM</p>
-                <p class="text-gray-400" id="v3_liveDate">10 اگست 2026</p>
-                <p class="text-blue-400">طالع: <span id="v3_currentTala">حوت 29°</span></p>
-            </div>
-        </div>
-
-        <!-- Date Controls & City Selector -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            <div class="flex items-center gap-2">
-                <button onclick="v3_changeDate(-1)" class="p-1.5 bg-yellow-600/20 border border-yellow-600/40 rounded text-yellow-400 font-bold hover:bg-yellow-600/40">پچھلا دن ◄</button>
-                <button onclick="v3_resetDate()" class="p-1.5 bg-yellow-600 text-black rounded font-bold">آج</button>
-                <button onclick="v3_changeDate(1)" class="p-1.5 bg-yellow-600/20 border border-yellow-600/40 rounded text-yellow-400 font-bold hover:bg-yellow-600/40">اگلا دن ►</button>
-            </div>
-            <div>
-                <select id="v3_citySelect" onchange="v3_updateData()" class="w-full p-1.5 bg-black/80 border border-yellow-600/50 rounded text-yellow-400 font-bold">
-                    <option value="دولت پور">دولت پور (Sindh)</option>
-                    <option value="نواب شاہ">نواب شاہ / Shaheed Benazirabad</option>
-                    <option value="مورو">مورو (Moro)</option>
-                    <option value="قاضی احمد">قاضی احمد</option>
-                    <option value="خانپور">خانپور</option>
-                    <option value="کراچی">کراچی</option>
-                    <option value="حیدرآباد">حیدرآباد</option>
-                    <option value="لاہور">لاہور</option>
-                    <option value="اسلام آباد">اسلام آباد</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Topic / Purpose Ruling Box -->
-        <div class="p-3 bg-black/60 border border-gray-800 rounded space-y-2 text-xs">
-            <div class="flex justify-between items-center">
-                <label class="font-bold text-yellow-400">مقصد / موضوع کا انتخاب کریں:</label>
-                <span id="v3_hukamStatus" class="font-bold text-green-400 px-2 py-0.5 bg-black rounded border border-gray-700">حکم: دشواری</span>
-            </div>
-            <select id="v3_topicSelect" onchange="v3_updateRuling()" class="w-full p-1.5 bg-black/80 border border-gray-700 rounded text-yellow-300">
-                <option value="عشق">عشق و محبت، مطیع کرنا، عورت کا مسئلہ</option>
-                <option value="مال">مال و دولت، کاروبار، رزق میں برکت</option>
-                <option value="دشمن">دشمن پر غلبہ، دفعِ شر، بندش</option>
-                <option value="صحت">شفائے امراض، علاج معالجہ</option>
-                <option value="سفر">سفر و ہجرت، نوکری، نقل مکانی</option>
-            </select>
-            <p id="v3_rulingText" class="p-2 bg-yellow-900/20 border border-yellow-600/30 rounded text-yellow-200 leading-relaxed">
-                عشق و محبت مطیع کرنا عورت کا کسی عورت کے حصول کا سوال سند لاری وغیرہ میں کامیابی کے لیے یہ ساعت بہترین ہے۔
-            </p>
-        </div>
-
-        <!-- Collapsible Astrological Details -->
-        <button onclick="document.getElementById('v3_astroDetails').classList.toggle('hidden')" class="w-full py-1.5 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 font-semibold text-xs rounded">
-            ✨ احوالِ شمس، قمر و منازلِ قمر (دکھائیں / چھپائیں)
-        </button>
-
-        <div id="v3_astroDetails" class="hidden p-3 bg-black/60 border border-gray-800 rounded space-y-1 text-xs font-mono">
-            <p>طالع (Ascendant): <b class="text-yellow-400">حوت 29° 38'</b></p>
-            <p>شمس (Sun): <b class="text-yellow-400">اسد 8° 30'</b></p>
-            <p>قمر (Moon): <b class="text-yellow-400">حوت 2° 24'</b></p>
-            <p>منزلِ قمر: <b class="text-green-400">فرغ الدلو المقدم (26 / 28) - حرف: ض</b></p>
-        </div>
-
-        <!-- 24 Hour Saat Table -->
-        <div class="space-y-2">
-            <h3 class="font-bold text-xs text-yellow-400 border-b border-gray-800 pb-1">24 گھنٹے کی تفصیلی جدولِ ساعت</h3>
-            <div id="v3_saatGrid" class="space-y-1 max-h-56 overflow-y-auto text-[11px] font-mono pr-1">
-                <!-- Javascript auto fills 24 saat rows -->
-            </div>
-        </div>
-    </div><!-- SECTION 4: حساباتِ روحانی -->
-<div id="sec4" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">حساباتِ روحانی (چشتی)</h2>
-        
-        <!-- Category Selector Buttons -->
-        <div class="grid grid-cols-3 gap-1.5 text-[11px] font-bold">
-            <button onclick="v4_selectMode('rishta')" id="v4_btn_rishta" class="p-2 rounded border border-yellow-600 bg-yellow-600 text-black">تعلقاتِ رشتہ</button>
-            <button onclick="v4_selectMode('sharakat')" id="v4_btn_sharakat" class="p-2 rounded border border-gray-700 bg-black/60 text-yellow-400">شراکت و دوست</button>
-            <button onclick="v4_selectMode('city')" id="v4_btn_city" class="p-2 rounded border border-gray-700 bg-black/60 text-yellow-400">علاقہ و شہر</button>
-        </div>
-
-        <!-- Dynamic Category Forms -->
-        <div id="v4_formArea" class="space-y-3 text-xs bg-black/60 p-3 border border-gray-800 rounded">
-            <!-- Form 1: Rishta -->
-            <div id="v4_form_rishta" class="space-y-2">
-                <p class="text-yellow-400 font-bold mb-1">حساب تعلقاتِ رشتہ و ازدواج</p>
-                <div>
-                    <label class="block mb-1">طالب معہ والدہ:</label>
-                    <input type="text" id="v4_r_talib" placeholder="طالب اور اس کی ماں کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
-                </div>
-                <div>
-                    <label class="block mb-1">مطلوب معہ والدہ:</label>
-                    <input type="text" id="v4_r_matloob" placeholder="مطلوب اور اس کی ماں کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
-                </div>
-            </div>
-
-            <!-- Form 2: Sharakat -->
-            <div id="v4_form_sharakat" class="hidden space-y-2">
-                <p class="text-yellow-400 font-bold mb-1">حساب شراکت و لین دین و دوست</p>
-                <div>
-                    <label class="block mb-1">طالب کا نام:</label>
-                    <input type="text" id="v4_s_talib" placeholder="طالب کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
-                </div>
-                <div>
-                    <label class="block mb-1">مطلوب / دوست کا نام:</label>
-                    <input type="text" id="v4_s_matloob" placeholder="دوست يا شراکت دار کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
-                </div>
-            </div>
-
-            <!-- Form 3: City -->
-            <div id="v4_form_city" class="hidden space-y-2">
-                <p class="text-yellow-400 font-bold mb-1">حسابِ موافقتِ علاقہ و شہر</p>
-                <div>
-                    <label class="block mb-1">سائل / طالب کا نام:</label>
-                    <input type="text" id="v4_c_talib" placeholder="اپنا نام لکھیں..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
-                </div>
-                <div>
-                    <label class="block mb-1">علاقہ یا شہر کا نام:</label>
-                    <input type="text" id="v4_c_city" placeholder="شہر یا علاقے کا نام..." class="w-full p-2 bg-black border border-gray-700 rounded text-yellow-300">
-                </div>
-            </div>
-
-            <button onclick="v4_calculate()" class="w-full py-2 bg-green-600 hover:bg-green-500 text-black font-bold text-xs rounded mt-2">
-                حساب لگائیں
-            </button>
-        </div>
-
-        <!-- Result Verdict Box -->
-        <div id="v4_resultBox" class="hidden p-3 bg-black/60 border border-yellow-600/50 rounded space-y-2 text-xs">
-            <div class="flex justify-between items-center border-b border-gray-800 pb-1">
-                <span class="font-bold text-yellow-400" id="v4_resTitle">تفصیلِ آپسی تعلقات:</span>
-                <button onclick="copyToClipboard(document.getElementById('v4_resText').innerText)" class="px-2 py-0.5 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی کریں</button>
-            </div>
-            <p id="v4_resText" class="text-yellow-200 leading-relaxed font-sans">--</p>
-        </div>
-
-        <!-- Comparative Grid Button & Box -->
-        <button onclick="document.getElementById('v4_compGrid').classList.toggle('hidden')" class="w-full py-1.5 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 font-semibold text-xs rounded">
-            👁 نتائج طالب و مطلوب دیکھیں / چھپائیں
-        </button>
-
-        <div id="v4_compGrid" class="hidden p-3 bg-black/60 border border-gray-800 rounded text-xs space-y-2 font-mono">
-            <div class="grid grid-cols-3 text-center border-b border-gray-800 pb-1 font-bold text-yellow-400">
-                <div>تفصیل</div> <div>طالب</div> <div>مطلوب / شہر</div>
-            </div>
-            <div class="grid grid-cols-3 text-center border-b border-gray-800/50 py-1">
-                <span>اعداد</span> <span id="v4_g_t_abjad" class="text-yellow-300">0</span> <span id="v4_g_m_abjad" class="text-yellow-300">0</span>
-            </div>
-            <div class="grid grid-cols-3 text-center border-b border-gray-800/50 py-1">
-                <span>برج (کسر)</span> <span id="v4_g_t_burj" class="text-green-400">--</span> <span id="v4_g_m_burj" class="text-green-400">--</span>
-            </div>
-            <div class="grid grid-cols-3 text-center border-b border-gray-800/50 py-1">
-                <span>حاکم سیارہ</span> <span id="v4_g_t_planet" class="text-blue-400">--</span> <span id="v4_g_m_planet" class="text-blue-400">--</span>
-            </div>
-            <div class="grid grid-cols-3 text-center py-1">
-                <span>عنصر</span> <span id="v4_g_t_elem" class="text-red-400">--</span> <span id="v4_g_m_elem" class="text-red-400">--</span>
-            </div>
-        </div>
-    </div>
-</div>
-</div><!-- SECTION 6: میزان الحروف فی العناصر والطبائع -->
-<div id="sec6" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">میزان الحروف فی العناصر والطبائع</h2>
-        
-        <!-- Inputs -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-            <div>
-                <label class="block text-xs font-semibold mb-1">طالب کا نام:</label>
-                <input type="text" id="v6_talib" oninput="v6_calculate()" placeholder="علی..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold mb-1">مطلوب کا نام:</label>
-                <input type="text" id="v6_matloob" oninput="v6_calculate()" placeholder="نوید..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-        </div>
-
-        <!-- Four Elements Degrees Table (درجاتِ عناصرِ اربعہ) -->
-        <div class="p-3 bg-black/60 border border-yellow-600/40 rounded text-xs space-y-2">
-            <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">درجاتِ عناصرِ اربعہ (توازن و دقیقہ)</p>
-            <div class="grid grid-cols-4 gap-1 text-center font-mono">
-                <div class="p-1.5 bg-red-950/40 border border-red-800/40 rounded">
-                    <span class="block text-red-400 font-bold">آتش</span>
-                    <span id="v6_atish" class="text-yellow-300">5 (مرتبہ)</span>
-                </div>
-                <div class="p-1.5 bg-yellow-950/40 border border-yellow-800/40 rounded">
-                    <span class="block text-yellow-400 font-bold">باد</span>
-                    <span id="v6_baad" class="text-yellow-300">5 (مرتبہ)</span>
-                </div>
-                <div class="p-1.5 bg-blue-950/40 border border-blue-800/40 rounded">
-                    <span class="block text-blue-400 font-bold">آب</span>
-                    <span id="v6_aab" class="text-yellow-300">0 (مرتبہ)</span>
-                </div>
-                <div class="p-1.5 bg-amber-950/40 border border-amber-800/40 rounded">
-                    <span class="block text-amber-500 font-bold">خاک</span>
-                    <span id="v6_khaak" class="text-yellow-300">0 (مرتبہ)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Four Qualities Breakdown Grid (کیفیاتِ اربعہ) -->
-        <div class="p-3 bg-black/60 border border-gray-800 rounded text-xs space-y-2 font-mono">
-            <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">کیفیاتِ اربعہ (جمع و نفی کے بعد موازنہ)</p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
-                <div class="p-1.5 bg-black rounded border border-gray-800">
-                    <span class="block text-gray-400">حرارت (گرمی):</span>
-                    <b id="v6_garmi" class="text-yellow-400">6.5%</b>
-                </div>
-                <div class="p-1.5 bg-black rounded border border-gray-800">
-                    <span class="block text-gray-400">برودت (سردی):</span>
-                    <b id="v6_sardi" class="text-blue-400">0%</b>
-                </div>
-                <div class="p-1.5 bg-black rounded border border-gray-800">
-                    <span class="block text-gray-400">رطوبت (تری):</span>
-                    <b id="v6_tari" class="text-green-400">14.5%</b>
-                </div>
-                <div class="p-1.5 bg-black rounded border border-gray-800">
-                    <span class="block text-gray-400">یبوست (خشکی):</span>
-                    <b id="v6_khushki" class="text-amber-400">7.0%</b>
-                </div>
-            </div>
-        </div>
-
-        <!-- Final Verdict Box -->
-        <div class="p-3 bg-yellow-900/30 border border-yellow-600/50 rounded text-center space-y-1.5">
-            <p class="text-xs text-yellow-400 font-bold">حتمی نتیجہ و طبعی غلبہ</p>
-            <div id="v6_verdict" class="text-sm font-bold text-green-400">
-                طبعی غلبہ تری ہے — عنصر باد غالب ہے
-            </div>
-            <p class="text-[11px] text-gray-300 leading-relaxed">
-                یہ عمل بادی عنصر کے اندر تری کی کیفیت کے ساتھ استعمال میں لایا جائے۔
-            </p>
-        </div>
-    </div><!-- SECTION 7: قانونِ طلسم التعجیب -->
-<div id="sec7" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">قانونِ طلسم التعجیب</h2>
-        
-        <!-- Inputs -->
-        <div class="space-y-3 text-xs">
-            <div>
-                <label class="block text-xs font-semibold mb-1">اسم / آیت / سورت لکھیں:</label>
-                <input type="text" id="v7_ism" oninput="v7_calculate()" placeholder="مثال: اللہ، بسم اللہ الرحمن الرحیم..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold mb-1">مقصد کا جملہ لکھیں:</label>
-                <input type="text" id="v7_purpose" oninput="v7_calculate()" placeholder="مثال: یا اللہ میرے رزق میں اضافہ فرما..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-        </div>
-
-        <!-- Core Talismatic Outputs -->
-        <div class="space-y-2 text-xs font-mono">
-            <!-- Numerical Code Box -->
-            <div class="p-2.5 bg-black/60 border border-yellow-600/50 rounded flex justify-between items-center">
-                <div>
-                    <span class="block text-gray-400 text-[10px]">طلسماتی عددی کوڈ:</span>
-                    <b id="v7_outNum" class="text-yellow-400 text-sm tracking-wider">00000000000</b>
-                </div>
-                <button onclick="copyToClipboard(document.getElementById('v7_outNum').innerText)" class="px-2 py-1 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی</button>
-            </div>
-
-            <!-- Alphabetical Code Box -->
-            <div class="p-2.5 bg-black/60 border border-yellow-600/50 rounded flex justify-between items-center">
-                <div>
-                    <span class="block text-gray-400 text-[10px]">حروفِ طلسم / مستخرجہ:</span>
-                    <b id="v7_outHuruf" class="text-green-400 text-sm tracking-widest">--</b>
-                </div>
-                <button onclick="copyToClipboard(document.getElementById('v7_outHuruf').innerText)" class="px-2 py-1 bg-yellow-600 text-black font-bold rounded text-[10px]">کاپی</button>
-            </div>
-
-            <!-- Letter Extension Box -->
-            <div class="p-2.5 bg-black/60 border border-gray-800 rounded">
-                <span class="block text-gray-400 text-[10px] mb-1">بسطِ حرفی کا نچوڑ:</span>
-                <p id="v7_outBast" class="text-yellow-200 tracking-widest leading-relaxed">--</p>
-            </div>
-        </div>
-
-        <!-- Instruction Note Box -->
-        <div class="p-3 bg-yellow-900/30 border border-yellow-600/40 rounded text-[11px] leading-relaxed">
-            <strong>⚠ ضروری ہدایت:</strong> ان حاصل شدہ حروف کو طلسم کے گرد 3 بار گول دائرے میں لکھیں اور اپنے مقصد کے عنصر کے مطابق استعمال میں لائیں۔
-        </div>
-    </div>
-</div>
-</div>// Section 7 Calculation Logic
-function v7_calculate() {
-    let ism = document.getElementById('v7_ism').value.replace(/[^آ-غی]/g, '');
-    let pur = document.getElementById('v7_purpose').value.replace(/[^آ-غی]/g, '');
-
-    if (!ism && !pur) {
-        document.getElementById('v7_outNum').innerText = '00000000000';
-        document.getElementById('v7_outHuruf').innerText = '--';
-        document.getElementById('v7_outBast').innerText = '--';
-        return;
-    }
-
-    let ismVal = v1_calcVal(ism);
-    let purVal = v1_calcVal(pur);
-
-    let numCode = (ismVal * 777 + purVal * 1111).toString();
-    if (numCode === '0') numCode = '27705951655200';
-
-    let hurufMap = {'1':'ا','2':'ب','3':'ج','4':'د','5':'ہ','6':'و','7':'ز','8':'ح','9':'ط','0':'ی'};
-    let extractedHuruf = '';
-    for (let d of numCode) extractedHuruf += (hurufMap[d] || '') + ' ';
-
-    let bastText = (ism + pur).split('').join(' ');
-
-    document.getElementById('v7_outNum').innerText = numCode;
-    document.getElementById('v7_outHuruf').innerText = extractedHuruf.trim();
-    document.getElementById('v7_outBast').innerText = bastText || '--';
-}<!-- SECTION 8: مخفی قوانینِ طلسماتِ روحانی (14 قوانین) (HTML + JavaScript) -->
-<div id="sec8" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">مخفی قوانینِ طلسماتِ روحانی</h2>
-        
-        <!-- Inputs -->
-        <div class="space-y-3 text-xs">
-            <div>
-                <label class="block text-xs font-semibold mb-1">اسم / آیت / سورت لکھیں:</label>
-                <input type="text" id="v8_ism" oninput="v8_calculate()" placeholder="مثال: نور، یا فتاح..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold mb-1">مقصد کا جملہ لکھیں:</label>
-                <input type="text" id="v8_purpose" oninput="v8_calculate()" placeholder="مثال: یا فتاح اسرار باطن..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-        </div>
-
-        <!-- 14 Laws Dropdown Selector -->
-        <div class="text-xs">
-            <label class="block font-bold text-yellow-400 mb-1">مقصد کے موافق قانون کا انتخاب کریں:</label>
-            <select id="v8_lawSelect" onchange="v8_calculate()" class="w-full p-2 bg-black/80 border border-yellow-600/60 rounded text-yellow-300 font-semibold">
-                <option value="1">1. قانون سکون و حرکت</option>
-                <option value="2">2. قانون فعل امر و مضارع</option>
-                <option value="3">3. قانون فعل امر (الگ)</option>
-                <option value="4">4. قانون مستقر و مستودع</option>
-                <option value="5">5. قانون مہیمن و مسیطر</option>
-                <option value="6">6. قانون فتح القفل</option>
-                <option value="7">7. قانون مغلاق و مفتاح</option>
-                <option value="8">8. قانون السماء و الأرض</option>
-                <option value="9">9. قانون الجاذبیہ</option>
-                <option value="10">10. قانون مفتاح الغیب</option>
-                <option value="11">11. قانون ظہور الباطن المخفی</option>
-                <option value="12">12. قانون الاختفاء</option>
-                <option value="13">13. قانون التعجیب</option>
-                <option value="14">14. قانون طلسم التسخیر</option>
-            </select>
-        </div>
-
-        <!-- Two Column Numerical Outputs -->
-        <div class="grid grid-cols-2 gap-2 text-center text-xs font-mono">
-            <div class="p-2 bg-black/60 border border-gray-800 rounded">
-                <span id="v8_col1_label" class="block text-gray-400 text-[10px]">فعل امر / حاکم:</span>
-                <b id="v8_col1_val" class="text-yellow-400 text-sm">0</b>
-            </div>
-            <div class="p-2 bg-black/60 border border-gray-800 rounded">
-                <span id="v8_col2_label" class="block text-gray-400 text-[10px]">فعل مضارع / جاری:</span>
-                <b id="v8_col2_val" class="text-green-400 text-sm">0</b>
-            </div>
-        </div>
-
-        <!-- Multiplied Talismatic Box (طلسمِ مقصد ضربی) -->
-        <div class="p-3 bg-black/60 border border-yellow-600/50 rounded text-center space-y-1">
-            <span class="text-xs text-yellow-400 font-bold block">طلسمِ مقصد (ضربی):</span>
-            <b id="v8_outMult" class="text-green-400 font-mono text-base tracking-wider block">00000000</b>
-        </div>
-
-        <!-- Dynamic Explanation Box -->
-        <div class="p-3 bg-yellow-900/20 border border-yellow-600/30 rounded text-xs space-y-1.5 leading-relaxed">
-            <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">قوانین کی وضاحت:</p>
-            <p id="v8_lawDesc" class="text-gray-200">
-                کسی بھی چیز (اسم، حرف، عدد یا شے) کی اندرونی اور ظاہری طاقت کو جاننے کا قانون۔
-            </p>
-        </div>
-    </div>
-</div>
-
-<!-- SECTION 8 SCRIPT -->
-<script>
-    const v8_lawDetails = {
-        '1': { col1: 'سکون', col2: 'حرکت', desc: '(سکون) طاقت کا چھپا ہوا یا غیر فعال ہونا۔ (حرکت) طاقت کا ظاہر ہونا یا اثر کرنا۔' },
-        '2': { col1: 'فعل امر', col2: 'فعل مضارع', desc: '(فعل امر) حکم دینے کی طاقت۔ (فعل مضارع) جاری حرکت یا اثر کی طاقت۔' },
-        '3': { col1: 'فعل امر (الگ)', col2: 'امراک', desc: 'کسی لفظ یا اسم کو حکم کی شکل دینا (الگ سے اس کی آمری قوت معلوم کرنا)۔' },
-        '4': { col1: 'مستقر', col2: 'مستودع', desc: 'قائم رہنے والی اور امانت رکھی جانے والی طاقت کا توازن۔' },
-        '5': { col1: 'مہیمن', col2: 'مسیطر', desc: 'نگہبانی اور مکمل تسلط قائم کرنے والا قانون۔' },
-        '6': { col1: 'فتح', col2: 'قفل', desc: 'کسی بھی بندش کو کھولنے یا مقفل کرنے کا قوت کا قانون۔' },
-        '7': { col1: 'مغلاق', col2: 'مفتاح', desc: '(مغلاق) بند کرنے والی قوت۔ (مفتاح) کھولنے والی قوت۔' },
-        '8': { col1: 'السماء', col2: 'الأرض', desc: 'علوی و سفلی قوتوں کو باہم ملا کر طلسم تیار کرنے کا قانون۔' },
-        '9': { col1: 'جاذبہ', col2: 'دافعہ', desc: 'اپنی طرف کھینچنے (کشش) اور دور ہٹانے کی طاقت کا حساب۔' },
-        '10': { col1: 'مفتاح الغیب', col2: 'مغلاق الغیب', desc: 'غیبی فتوحات اور مخفی اسرار کو ظاہر کرنے کی کلید۔' },
-        '11': { col1: 'ظہور الباطن', col2: 'خفاء الظاہر', desc: 'پوشیدہ اثرات کو ظاہر کرنے اور ظاہری چیز کو مخفی کرنے کا قانون۔' },
-        '12': { col1: 'اختفاء', col2: 'تجلی', desc: 'حفاظت و بندش برائے اختفاء اور نظروں سے اوجھل کرنا۔' },
-        '13': { col1: 'تعجیب', col2: 'تکثیر', desc: 'حیرت انگیز اثرات پیدا کرنے اور حروف کی کثرت کا قانون۔' },
-        '14': { col1: 'تسخیر', col2: 'انقیاد', desc: 'قلوب کو مسخر کرنے اور مطیع بنانے کی مکمل قوت۔' }
-    };
-
-    function v8_calculate() {
-        let ism = document.getElementById('v8_ism').value.replace(/[^آ-غی]/g, '');
-        let pur = document.getElementById('v8_purpose').value.replace(/[^آ-غی]/g, '');
-        let lawId = document.getElementById('v8_lawSelect').value;
-
-        let info = v8_lawDetails[lawId] || v8_lawDetails['1'];
-
-        document.getElementById('v8_col1_label').innerText = info.col1 + ':';
-        document.getElementById('v8_col2_label').innerText = info.col2 + ':';
-        document.getElementById('v8_lawDesc').innerText = info.desc;
-
-        if (!ism && !pur) {
-            document.getElementById('v8_col1_val').innerText = '0';
-            document.getElementById('v8_col2_val').innerText = '0';
-            document.getElementById('v8_outMult').innerText = '00000000';
-            return;
-        }
-
-        let ismVal = typeof v1_calcVal === 'function' ? v1_calcVal(ism) : 150;
-        let purVal = typeof v1_calcVal === 'function' ? v1_calcVal(pur) : 300;
-
-        let val1 = Math.floor(ismVal * (parseInt(lawId) + 2) * 1.5);
-        let val2 = Math.floor(purVal * (parseInt(lawId) + 1) * 2.2);
-        let mult = (ismVal || 12) * (purVal || 88) * parseInt(lawId) * 777;
-
-        document.getElementById('v8_col1_val').innerText = val1;
-        document.getElementById('v8_col2_val').innerText = val2;
-        document.getElementById('v8_outMult').innerText = mult.toString();
-    }
-</script><!-- SECTION 9: مجموعہ طلسماتِ قانونِ شمع (HTML + JavaScript) -->
-<div id="sec9" class="tab-content hidden">
-    <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">مجموعہ طلسماتِ قانونِ شمع</h2>
-        
-        <!-- Inputs -->
-        <div class="space-y-3 text-xs">
-            <div>
-                <label class="block text-xs font-semibold mb-1">اسم / آیت / سورت درج کریں:</label>
-                <input type="text" id="v9_ism" oninput="v9_calculate()" placeholder="مثال: بسم اللہ الرحمن الرحیم..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold mb-1">طالب / مطلوب کا نام درج کریں:</label>
-                <input type="text" id="v9_names" oninput="v9_calculate()" placeholder="مثال: رحیم، علی..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
-            </div>
-        </div>
-
-        <!-- Law Selector Dropdown -->
-        <div class="text-xs">
-            <label class="block font-bold text-yellow-400 mb-1">قانونِ شمع کا انتخاب کریں:</label>
-            <select id="v9_lawSelect" onchange="v9_calculate()" class="w-full p-2 bg-black/80 border border-yellow-600/60 rounded text-yellow-300 font-semibold">
-                <option value="1">قانون نمبر 1 (جلب و تسخیر)</option>
-                <option value="2">قانون نمبر 2 (محبتِ شدید)</option>
-                <option value="3">قانون نمبر 3 (احراق و بیقراری)</option>
-                <option value="4">قانون نمبر 4 (تطہیر و تسخیرِ قلوب)</option>
-                <option value="5">قانون نمبر 5 (عطوف و مطیع)</option>
-            </select>
-        </div>
-
-        <!-- Candle Graphics Output (شمع گرافکس) -->
-        <div class="flex flex-col items-center justify-center p-4 bg-black/80 border border-gray-800 rounded relative overflow-hidden">
-            <!-- Flame Graphic -->
-            <div class="w-6 h-8 bg-gradient-to-t from-yellow-500 via-orange-500 to-red-500 rounded-full blur-[1px] animate-pulse mb-1"></div>
-            
-            <!-- Candle Body -->
-            <div class="w-28 bg-red-700 border-2 border-red-900 rounded-t-sm p-3 min-h-[140px] flex flex-col items-center justify-center text-center shadow-2xl relative">
-                <!-- Vertical Inscribed Text -->
-                <p id="v9_candleText" class="writing-mode-vertical text-yellow-300 font-mono text-xs font-bold tracking-widest leading-loose">
-                    زفدگکہ...<br>۲۸۳۹۱۲۸۰۷۳۱۹۵۰۰
-                </p>
-            </div>
-            <!-- Candle Base -->
-            <div class="w-36 h-3 bg-red-900 rounded-b-md shadow-md"></div>
-        </div>
-
-        <!-- Invocation Note Box (عزیمتِ شمع) -->
-        <div class="p-3 bg-black/80 border border-yellow-600/40 rounded space-y-1 text-xs font-mono">
-            <span class="block text-yellow-400 font-bold border-b border-gray-800 pb-1">عزیمتِ شمع:</span>
-            <p id="v9_azimat" class="text-green-400 leading-relaxed text-[11px]">
-                توكلوا بگذا وبگذا بحق الآية التي دخلتم بها، وإنه لقسم لو تعلمون عظیم بارك الله فيكم وعليكم، الوُحَا العَجَلَ السَّاعَةَ۔
-            </p>
-        </div>
-
-        <button onclick="copyToClipboard(document.getElementById('v9_azimat').innerText)" class="w-full py-2 bg-yellow-600 hover:bg-yellow-500 text-black font-bold text-xs rounded shadow">
-            عزیمت کاپی کریں
-        </button>
-    </div>
-</div>
-
-<!-- SECTION 9 SCRIPT -->
-<script>
-    function v9_calculate() {
-        let ism = document.getElementById('v9_ism').value.replace(/[^آ-غی]/g, '');
-        let names = document.getElementById('v9_names').value.replace(/[^آ-غی]/g, '');
-        let law = document.getElementById('v9_lawSelect').value;
-
-        if (!ism && !names) {
-            document.getElementById('v9_candleText').innerHTML = 'زفدگکہ...<br>۲۸۳۹۱۲۸۰۷۳۱۹۵۰۰';
-            return;
-        }
-
-        let ismVal = typeof v1_calcVal === 'function' ? v1_calcVal(ism) : 120;
-        let namesVal = typeof v1_calcVal === 'function' ? v1_calcVal(names) : 340;
-
-        let numStr = (ismVal * 888 + namesVal * 333 * parseInt(law)).toString();
-        let map = {'1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹','0':'۰'};
-        let easternNum = '';
-        for (let d of numStr) easternNum += (map[d] || d);
-
-        let hurufPart = (ism + names).substring(0, 6).split('').join('');
-        if (!hurufPart) hurufPart = 'ممممطاااا';
-
-        document.getElementById('v9_candleText').innerHTML = `${hurufPart}<br>${easternNum}`;
-    }
-</script>
+</body>
+</html>
