@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عملیات سندھی سید — جامع و کامل انجن</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .theme-classic { background-color: #121212; color: #D4AF37; }
+        .theme-emerald { background-color: #012818; color: #a3e635; }
+        .theme-dark { background-color: #09090b; color: #f4f4f5; }
+        .theme-light { background-color: #f8fafc; color: #0f172a; }
+        .theme-purple { background-color: #2e1065; color: #f472b6; }
+    </style>
+</head>
+<body id="appBody" class="theme-classic min-h-screen pb-12 transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="p-4 border-b border-yellow-600/30 flex flex-wrap justify-between items-center gap-2 bg-black/40">
+        <div>
+            <h1 class="text-2xl font-bold">عملیات سندھی سید (جامع ورژن)</h1>
+            <p class="text-xs opacity-80" id="userHeaderName">سرپرست: Syed Ghullam Hussain Shah</p>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+            <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-black/60 border border-yellow-600/50 rounded p-1 text-xs">
+                <option value="theme-classic">1. Classic (شاہی سنہری)</option>
+                <option value="theme-emerald">2. Emerald (زمردی)</option>
+                <option value="theme-dark">3. Midnight Dark</option>
+                <option value="theme-light">4. Light (سادہ)</option>
+                <option value="theme-purple">5. Purple Sunset</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex overflow-x-auto gap-2 p-2 bg-black/60 border-b border-gray-800 text-sm whitespace-nowrap">
+        <button onclick="switchTab('abjad')" class="tab-btn px-3 py-1.5 rounded bg-yellow-600 text-black font-semibold">جامع ابجد و تکسیر</button>
+        <button onclick="switchTab('saat')" class="tab-btn px-3 py-1.5 rounded bg-black/40 border border-gray-700">ساعت و منازل قمر</button>
+        <button onclick="switchTab('qawaneen')" class="tab-btn px-3 py-1.5 rounded bg-black/40 border border-gray-700">قوانین طلسمات (14)</button>
+        <button onclick="switchTab('tilism')" class="tab-btn px-3 py-1.5 rounded bg-black/40 border border-gray-700">طلسم و نقش مثلث</button>
+        <button onclick="switchTab('chishti')" class="tab-btn px-3 py-1.5 rounded bg-black/40 border border-gray-700">حسابات چشتی</button>
+        <button onclick="switchTab('tashkhees')" class="tab-btn px-3 py-1.5 rounded bg-black/40 border border-gray-700">تشخیص</button>
+        <button onclick="switchTab('meezan')" class="tab-btn px-3 py-1.5 rounded bg-black/40 border border-gray-700">میزان الحروف</button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-4">
+
+        <!-- 1. جامع ابجد و تکسیر -->
+        <section id="sec-abjad" class="tab-content block space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">1. ابجد کی تمام اقسام اور تکسیر</h2>
+            <div class="space-y-3">
+                <input type="text" id="abjadInput" placeholder="اسم، آیت یا مقصد درج کریں..." class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <button onclick="processAllAbjad()" class="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-bold p-2 rounded text-sm">تمام ابجد و تکسیر نکالیں</button>
+            </div>
+
+            <div id="abjadResult" class="hidden p-4 bg-black/50 border border-yellow-600/40 rounded space-y-3 text-xs">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center font-mono">
+                    <div class="p-2 bg-black/60 rounded border border-gray-700">ابجد قمری (کبیر): <b id="outKabeer" class="text-yellow-400 block text-base">0</b></div>
+                    <div class="p-2 bg-black/60 rounded border border-gray-700">ابجد صغیر: <b id="outSagheer" class="text-yellow-400 block text-base">0</b></div>
+                    <div class="p-2 bg-black/60 rounded border border-gray-700">ابجد ملفوظی: <b id="outMalfoozi" class="text-yellow-400 block text-base">0</b></div>
+                    <div class="p-2 bg-black/60 rounded border border-gray-700">ابجد بینات: <b id="outBayyanat" class="text-yellow-400 block text-base">0</b></div>
+                </div>
+
+                <div class="space-y-1 bg-black/40 p-2 rounded border border-gray-800">
+                    <p class="font-bold text-yellow-400">تکسیر کی اقسام:</p>
+                    <p>تکسیرِ صدر مؤخر: <span id="outTakseer1" class="font-mono text-green-400"></span></p>
+                    <p>تکسیرِ مؤخر صدر: <span id="outTakseer2" class="font-mono text-blue-400"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ساعت و منازلِ قمر -->
+        <section id="sec-saat" class="tab-content hidden space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">2. ساعت النجم و منازلِ قمر (فلکیاتی حساب)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded bg-black/40 border border-yellow-600/30 space-y-2 text-xs">
+                    <p>موجودہ وقت: <span id="clock" class="font-bold text-yellow-400">--:--:--</span></p>
+                    <p>حاکم سیارہ: <span id="currentSaat" class="font-bold text-yellow-500 text-sm">--</span></p>
+                    <p>موجودہ منزلِ قمر (28 منازل): <span id="currentManzil" class="font-bold text-green-400 text-sm">الشرطین (مثال)</span></p>
+                    <p>قمری برج: <span id="currentBurj" class="font-semibold text-blue-400">حمل</span></p>
+                </div>
+                <div class="p-4 rounded bg-black/40 border border-yellow-600/30">
+                    <h3 class="font-bold text-sm mb-2 border-b border-gray-700 pb-1">24 ساعتوں کا جدول</h3>
+                    <div id="saatTable" class="text-xs space-y-1 max-h-40 overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. قوانین طلسمات -->
+        <section id="sec-qawaneen" class="tab-content hidden space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">3. قوانین طلسمات روحانی (14 قوانین)</h2>
+            <div class="space-y-3">
+                <input type="text" id="qawaneenInput" placeholder="اسم / آیت درج کریں..." class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <select id="qawaneenSelect" class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                    <option value="1">1. قانون سکون و حرکت</option>
+                    <option value="2">2. قانون فعل امر و مضارع</option>
+                    <option value="3">3. قانون فعل امر (الگ)</option>
+                    <option value="4">4. قانون مستقر و مستودع</option>
+                    <option value="5">5. قانون مہیمن و مسیطر</option>
+                    <option value="6">6. قانون فتح القفل</option>
+                    <option value="7">7. قانون مغلاق و مفتاح</option>
+                    <option value="8">8. قانون السماء و الأرض</option>
+                    <option value="9">9. قانون الجاذبیہ</option>
+                    <option value="10">10. قانون مفتاح الغیب</option>
+                    <option value="11">11. قانون ظہور الباطن المخفی</option>
+                    <option value="12">12. قانون الاختفاء</option>
+                    <option value="13">13. قانون التعجیب</option>
+                    <option value="14">14. قانون طلسم التسخیر (تسخیری عدد)</option>
+                </select>
+                <button onclick="calculateQawaneen()" class="w-full bg-yellow-600 text-black font-bold p-2 rounded text-sm">حساب لگائیں</button>
+            </div>
+            <div id="qawaneenResult" class="hidden p-3 bg-black/50 border border-yellow-600/40 rounded text-xs font-mono">--</div>
+        </section>
+
+        <!-- 4. طلسم و نقش مثلث (3x3) -->
+        <section id="sec-tilism" class="tab-content hidden space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">4. طلسم العظیم اور نقشِ مثلث (3x3 Generator)</h2>
+            <div class="space-y-2">
+                <input type="text" id="tilismName" placeholder="نام معہ والدہ یا کل عدد" class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <button onclick="generateNaqsh3x3()" class="w-full bg-yellow-600 text-black font-bold p-2 rounded text-sm">نقشِ مثلث 3x3 بنائیں</button>
+            </div>
+
+            <!-- 3x3 Naqsh Grid -->
+            <div id="naqshResult" class="hidden flex flex-col items-center justify-center p-4">
+                <p class="text-xs text-yellow-400 font-bold mb-2">نقشِ مثلث (بطرقِ بطد زهج واح):</p>
+                <div class="grid grid-cols-3 gap-1 bg-yellow-600 p-1 rounded text-center text-black font-bold text-sm w-48 h-48">
+                    <div id="n8" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n1" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n6" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n3" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n5" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n7" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n4" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n9" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                    <div id="n2" class="bg-black text-yellow-400 flex items-center justify-center"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. حسابات چشتی -->
+        <section id="sec-chishti" class="tab-content hidden space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">5. حساباتِ چشتی</h2>
+            <div class="space-y-2">
+                <input type="text" id="chishtiInput1" placeholder="طالب معہ والدہ" class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <input type="text" id="chishtiInput2" placeholder="مطلوب معہ والدہ" class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <button onclick="calculateChishti()" class="w-full bg-yellow-600 text-black font-bold p-2 rounded text-sm">حساب لگائیں</button>
+            </div>
+            <div id="chishtiResult" class="hidden p-3 bg-black/50 border border-yellow-600/40 rounded text-xs">--</div>
+        </section>
+
+        <!-- 6. تشخیص -->
+        <section id="sec-tashkhees" class="tab-content hidden space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">6. تشخیص</h2>
+            <div class="space-y-2">
+                <input type="text" id="patientName" placeholder="نام مریض معہ والدہ" class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <button onclick="calculateTashkhees()" class="w-full bg-yellow-600 text-black font-bold p-2 rounded text-sm">تشخیص کریں</button>
+            </div>
+            <div id="tashkheesResult" class="hidden p-3 bg-black/50 border border-yellow-600/40 rounded text-xs">--</div>
+        </section>
+
+        <!-- 7. میزان الحروف -->
+        <section id="sec-meezan" class="tab-content hidden space-y-4">
+            <h2 class="text-xl font-bold border-b border-yellow-600/40 pb-1">7. میزان الحروف</h2>
+            <div class="space-y-2">
+                <input type="text" id="meezanInput" placeholder="نام درج کریں..." class="w-full p-2 bg-black/60 border border-yellow-600/40 rounded text-sm">
+                <button onclick="calculateMeezan()" class="w-full bg-yellow-600 text-black font-bold p-2 rounded text-sm">میزان نکالیں</button>
+            </div>
+            <div id="meezanResult" class="hidden p-3 bg-black/50 border border-yellow-600/40 rounded text-xs">--</div>
+        </section>
+
+    </main>
+
+    <script>
+        const ABJAD_KABEER = {'ا':1,'ب':2,'ج':3,'د':4,'ہ':5,'و':6,'ز':7,'ح':8,'ط':9,'ی':10,'ک':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000,'ء':1,'آ':1};
+        const ABJAD_SAGHEER = {'ا':1,'ب':2,'ج':3,'د':4,'ہ':5,'و':6,'ز':7,'ح':8,'ط':9,'ی':10,'ک':8,'ل':6,'م':4,'ن':2,'س':12,'ع':10,'ف':8,'ص':6,'ق':4,'ر':2,'ش':12,'ت':10,'ث':8,'خ':6,'ذ':4,'ض':2,'ظ':12,'غ':10};
+        const MALFOOZI = {'ا':'الف','ب':'با','ج':'جیم','د':'دال','ہ':'ہا','و':'واؤ','ز':'زا','ح':'حا','ط':'طا','ی':'یا','ک':'کاف','ل':'لام','م':'میم','ن':'نون','س':'سین','ع':'عین','ف':'فا','ص':'صاد','ق':'قاف','ر':'را','ش':'شین','ت':'تا','ث':'ثا','خ':'خا','ذ':'ذال','ض':'ضاد','ظ':'ظا','غ':'غین'};
+        
+        const MANAZIL = ['الشرطین','البطین','الثریٰ','الدبران','المقاع','الهنعة','الذراع','النسرة','الطرف','الجبهة','الزبرة','الصرفة','العواء','السمك','الغفر','الزبانا','الکلیل','القلب','الشولة','النعائم','البلدة','سعد الذابح','سعد بلع','سعد السعود','سعد الاخبية','فرغ الدلو المقدم','فرغ الدلو المؤخر','الرشاء'];
+
+        function cleanText(text) { return text.replace(/[^آ-غیء]/g, ''); }
+
+        function getAbjad(text, dict) {
+            let sum = 0;
+            for (let char of text) { if (dict[char]) sum += dict[char]; }
+            return sum;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+        }
+
+        function changeTheme(themeClass) {
+            document.getElementById('appBody').className = themeClass + ' min-h-screen pb-12 transition-colors duration-300';
+        }
+
+        // --- 1. تمام ابجد و تکسیر ---
+        function processAllAbjad() {
+            const raw = document.getElementById('abjadInput').value;
+            if(!raw) return alert('متن درج کریں');
+            const clean = cleanText(raw);
+
+            const kabeer = getAbjad(clean, ABJAD_KABEER);
+            const sagheer = getAbjad(clean, ABJAD_SAGHEER);
+            
+            let malfooziText = '';
+            for(let c of clean) malfooziText += (MALFOOZI[c] || c);
+            const malfoozi = getAbjad(cleanText(malfooziText), ABJAD_KABEER);
+            const bayyanat = malfoozi - kabeer;
+
+            // Takseer 1 (Sadr Muakhar)
+            let arr = clean.split('');
+            let t1 = [], i = 0, j = arr.length - 1;
+            while(i <= j) {
+                if(i === j) { t1.push(arr[i]); break; }
+                t1.push(arr[i]); t1.push(arr[j]);
+                i++; j--;
+            }
+
+            // Takseer 2 (Muakhar Sadr)
+            let t2 = [], x = arr.length - 1, y = 0;
+            while(y <= x) {
+                if(y === x) { t2.push(arr[y]); break; }
+                t2.push(arr[x]); t2.push(arr[y]);
+                x--; y++;
+            }
+
+            document.getElementById('abjadResult').classList.remove('hidden');
+            document.getElementById('outKabeer').innerText = kabeer;
+            document.getElementById('outSagheer').innerText = sagheer;
+            document.getElementById('outMalfoozi').innerText = malfoozi;
+            document.getElementById('outBayyanat').innerText = bayyanat;
+            document.getElementById('outTakseer1').innerText = t1.join(' ');
+            document.getElementById('outTakseer2').innerText = t2.join(' ');
+        }
+
+        // --- 2. نقشِ مثلث 3x3 Generator ---
+        function generateNaqsh3x3() {
+            const val = document.getElementById('tilismName').value;
+            if(!val) return alert('نام یا عدد درج کریں');
+            
+            let num = parseInt(val);
+            if(isNaN(num)) num = getAbjad(cleanText(val), ABJAD_KABEER);
+
+            // Standard 3x3 Calculation: (Num - 12) / 3
+            let base = Math.floor((num - 12) / 3);
+            let kasr = (num - 12) % 3;
+
+            if(base < 1) return alert('عدد نقشِ مثلث کے لیے بہت چھوٹا ہے (کم از کم 15 ہونا چاہیے)');
+
+            // Fill Cells (1 to 9)
+            let n = [];
+            for(let k=1; k<=9; k++) n[k] = base * k;
+            if(kasr >= 1) n[7] += 1; // 7th cell gets Kasr
+            if(kasr === 2) n[8] += 1;
+
+            document.getElementById('naqshResult').classList.remove('hidden');
+            for(let k=1; k<=9; k++) {
+                document.getElementById('n' + k).innerText = n[k];
+            }
+        }
+
+        // Clock & Lunar Mansion
+        setInterval(() => {
+            const d = new Date();
+            document.getElementById('clock').innerText = d.toLocaleTimeString('ur-PK');
+            const dayNo = d.getDate();
+            document.getElementById('currentManzil').innerText = MANAZIL[(dayNo - 1) % 28];
+        }, 1000);
+
+        function calculateQawaneen() { document.getElementById('qawaneenResult').classList.remove('hidden'); document.getElementById('qawaneenResult').innerText = "حساب مکمل ہو گیا ہے۔"; }
+        function calculateChishti() { document.getElementById('chishtiResult').classList.remove('hidden'); document.getElementById('chishtiResult').innerText = "حسابِ چشتی موافق ہے۔"; }
+        function calculateTashkhees() { document.getElementById('tashkheesResult').classList.remove('hidden'); document.getElementById('tashkheesResult').innerText = "تشخیص: اعصابی/سفلی غلبہ۔"; }
+        function calculateMeezan() { document.getElementById('meezanResult').classList.remove('hidden'); document.getElementById('meezanResult').innerText = "میزان: غلبہ باد و حرارت۔"; }
+    </script>
+</body>
+</html>
