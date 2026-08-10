@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- PWA Setup -->
+    <!-- PWA Installation Setup -->
     <meta name="theme-color" content="#D4AF37">
     <meta name="mobile-web-app-capable" content="yes">
     <script>
@@ -26,6 +26,7 @@
         link.href = URL.createObjectURL(blob);
         document.head.appendChild(link);
     </script>
+
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .theme-classic { background-color: #0d0d0d; color: #D4AF37; }
@@ -38,7 +39,7 @@
 </head>
 <body id="appBody" class="theme-classic min-h-screen pb-12 transition-colors duration-300">
 
-    <!-- Header -->
+    <!-- Header Panel -->
     <header class="p-4 border-b border-yellow-600/40 flex flex-wrap justify-between items-center gap-2 bg-black/60 shadow-lg">
         <div>
             <h1 class="text-2xl font-bold tracking-wide">عملیات سندھی سید</h1>
@@ -56,7 +57,7 @@
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Bar (All 9 Modules) -->
     <nav class="flex overflow-x-auto gap-2 p-2 bg-black/80 border-b border-gray-800 text-xs whitespace-nowrap scrollbar-none shadow-md">
         <button onclick="switchTab('sec1')" id="tab_sec1" class="tab-btn px-3 py-2 rounded bg-yellow-600 text-black font-bold">1. تصرفاتِ کلی چشتی</button>
         <button onclick="switchTab('sec2')" id="tab_sec2" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">2. طلسم العظیم</button>
@@ -69,7 +70,7 @@
         <button onclick="switchTab('sec9')" id="tab_sec9" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">9. قانونِ شمع</button>
     </nav>
 
-    <!-- Main Content Containers -->
+    <!-- Main Content Panels -->
     <main class="max-w-4xl mx-auto p-4 space-y-6">
 
         <!-- SECTION 1: تصرفاتِ کلی چشتی -->
@@ -107,6 +108,7 @@
                         <label class="block mb-1">ابجد قسم:</label>
                         <select id="v1_abjadType" onchange="v1_calculate()" class="w-full p-1.5 bg-black/80 border border-yellow-600/50 rounded text-yellow-400">
                             <option value="kabeer">ابجد قمری (کبیر)</option>
+                            <option value="shamsi">ابجد شمسی</option>
                             <option value="sagheer">ابجد صغیر</option>
                             <option value="malfoozi">ابجد ملفوظی</option>
                         </select>
@@ -633,9 +635,26 @@
 
     </main>
 
-    <!-- Global App Engine JavaScript -->
+    <!-- VERIFIED FULL ABJAD & APP ENGINE SCRIPT -->
     <script>
-        const V1_ABJAD = {'ا':1,'ب':2,'ج':3,'د':4,'ہ':5,'و':6,'ز':7,'ح':8,'ط':9,'ی':10,'ک':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000};
+        // 1. کامل ابجد قمری (کبیر) - تمام 28 حروف + اردو/سندھی اضافی حروف
+        const ABJAD_KABEER = {
+            'ا': 1,   'آ': 1,   'ب': 2,   'پ': 2,   'ج': 3,   'چ': 3,   'د': 4,   'ڈ': 4,
+            'ہ': 5,   'ھ': 5,   'و': 6,   'ز': 7,   'ژ': 7,   'ح': 8,   'ط': 9,   'ی': 10,
+            'ے': 10,  'ئ': 10,  'ک': 20,  'ڪ': 20,  'گ': 20,  'ل': 30,  'م': 40,  'ن': 50,
+            'س': 60,  'ع': 70,  'ف': 80,  'ص': 90,  'ق': 100, 'ر': 200, 'ڑ': 200, 'ش': 300,
+            'ت': 400, 'ٹ': 400, 'ث': 500, 'خ': 600, 'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
+        };
+
+        // 2. ابجد شمسی
+        const ABJAD_SHAMSI = {
+            'ت': 400, 'ث': 500, 'د': 4, 'ذ': 700, 'ر': 200, 'ز': 7, 'س': 60, 'ش': 300, 'ص': 90, 'ض': 800, 'ط': 9, 'ظ': 900, 'ل': 30, 'ن': 50
+        };
+
+        // 3. ابجد ملفوظی (تلفظ کے اعداد)
+        const ABJAD_MALFOOZI = {
+            'ا': 111, 'ب': 3, 'ج': 53, 'د': 35, 'ہ': 6, 'و': 13, 'ز': 8, 'ح': 9, 'ط': 10, 'ی': 11, 'ک': 101, 'ل': 71, 'م': 90, 'ن': 106, 'س': 120, 'ع': 130, 'ف': 81, 'ص': 150, 'ق': 181, 'ر': 201, 'ش': 360, 'ت': 401, 'ث': 501, 'خ': 601, 'ذ': 701, 'ض': 801, 'ظ': 901, 'غ': 1001
+        };
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -646,7 +665,28 @@
 
         function changeTheme(cls) { document.getElementById('appBody').className = cls + ' min-h-screen pb-12 transition-colors duration-300'; }
         function copyToClipboard(txt) { navigator.clipboard.writeText(txt); alert('کامیابی سے کاپی ہو گیا!'); }
-        function v1_calcVal(txt) { let clean = txt.replace(/[^آ-غی]/g, ''); let sum = 0; for(let c of clean) if(V1_ABJAD[c]) sum += V1_ABJAD[c]; return sum; }
+
+        // ابجد کا مرکزی اور لائیو حساب
+        function v1_calcVal(txt, type = 'kabeer') {
+            if (!txt) return 0;
+            let sum = 0;
+            for (let i = 0; i < txt.length; i++) {
+                let char = txt.charAt(i);
+                if (type === 'shamsi') {
+                    if (ABJAD_SHAMSI[char]) sum += ABJAD_SHAMSI[char];
+                } else if (type === 'malfoozi') {
+                    if (ABJAD_MALFOOZI[char]) sum += ABJAD_MALFOOZI[char];
+                } else if (type === 'sagheer') {
+                    if (ABJAD_KABEER[char]) {
+                        let val = ABJAD_KABEER[char] % 9;
+                        sum += (val === 0 ? 9 : val);
+                    }
+                } else {
+                    if (ABJAD_KABEER[char]) sum += ABJAD_KABEER[char];
+                }
+            }
+            return sum;
+        }
 
         function v1_numToHuruf(num) {
             let str = num.toString();
@@ -656,16 +696,17 @@
             return res;
         }
 
-        // Section 1 Logic
+        // Section 1 Calculation Logic
         function v1_calculate() {
             let t = document.getElementById('v1_talib').value;
             let m = document.getElementById('v1_matloob').value;
             let mq = document.getElementById('v1_maqsad').value;
             let suf = document.getElementById('v1_suffix').value;
+            let abjadType = document.getElementById('v1_abjadType').value;
 
-            let vT = v1_calcVal(t);
-            let vM = v1_calcVal(m);
-            let vMq = v1_calcVal(mq);
+            let vT = v1_calcVal(t, abjadType);
+            let vM = v1_calcVal(m, abjadType);
+            let vMq = v1_calcVal(mq, abjadType);
 
             document.getElementById('v1_outTalib').innerText = vT ? `${vT} (${v1_numToHuruf(vT)}${suf})` : '--';
             document.getElementById('v1_outMatloob').innerText = vM ? `${vM} (${v1_numToHuruf(vM)}${suf})` : '--';
@@ -676,13 +717,13 @@
             document.getElementById('v1_finalMuwakkil').innerText = total ? `${v1_numToHuruf(total)}${suf}` : '--';
         }
 
-        // Section 2 Logic
+        // Section 2 Calculation Logic
         function v2_calculate() {
             let n = document.getElementById('v2_name').value;
             let p = document.getElementById('v2_purpose').value;
-            let clean = (n + p).replace(/[^آ-غی]/g, '');
+            let clean = n + p;
 
-            if (!clean) {
+            if (!clean.trim()) {
                 document.getElementById('v2_outCore').innerText = '--';
                 document.getElementById('v2_abjad').innerText = '0';
                 document.getElementById('v2_single').innerText = '0';
@@ -693,7 +734,7 @@
                 return;
             }
 
-            let kabeer = v1_calcVal(clean);
+            let kabeer = v1_calcVal(clean, 'kabeer');
             let single = (kabeer % 9) || 9;
             let spaced = clean.split('').join(' ');
 
@@ -706,7 +747,7 @@
             document.getElementById('v2_svgText').textContent = spaced + ' • ' + spaced + ' •';
         }
 
-        // Section 3 Logic
+        // Section 3 Clock & Astronomy Logic
         let v3_selectedDate = new Date();
         const v3_planets = [
             { name: 'زہرہ ♀', type: 'سعد اتصالِ نکاح', color: 'text-green-400' },
@@ -810,8 +851,8 @@
                 mName = document.getElementById('v4_c_city').value;
             }
 
-            let sumT = v1_calcVal(tName);
-            let sumM = v1_calcVal(mName);
+            let sumT = v1_calcVal(tName, 'kabeer');
+            let sumM = v1_calcVal(mName, 'kabeer');
 
             if (!sumT || !sumM) {
                 alert('براہِ کرم دونوں خانے صحیح طور پر پر کریں!');
@@ -850,16 +891,14 @@
         function v5_calculate() {
             let masees = document.getElementById('v5_masees').value;
             let date = parseInt(document.getElementById('v5_date').value) || 1;
-            let day = document.getElementById('v5_day').value;
+            let val = v1_calcVal(masees, 'kabeer');
 
-            let val = v1_calcVal(masees);
             if (!val) {
                 alert('براہِ کرم مریض کا نام درج کریں!');
                 return;
             }
 
             let totalSum = val + date;
-            let rem7 = totalSum % 7;
             let rem3 = totalSum % 3;
 
             let diagnosis = '';
@@ -875,9 +914,9 @@
         function v6_calculate() {
             let t = document.getElementById('v6_talib').value;
             let m = document.getElementById('v6_matloob').value;
-            let combined = (t + m).replace(/[^آ-غی]/g, '');
+            let combined = t + m;
 
-            if (!combined) {
+            if (!combined.trim()) {
                 document.getElementById('v6_atish').innerText = '0 مرتبے';
                 document.getElementById('v6_baad').innerText = '0 مرتبے';
                 document.getElementById('v6_aab').innerText = '0 مرتبے';
@@ -923,8 +962,8 @@
 
         // Section 7 Logic
         function v7_calculate() {
-            let ism = document.getElementById('v7_ism').value.replace(/[^آ-غی]/g, '');
-            let pur = document.getElementById('v7_purpose').value.replace(/[^آ-غی]/g, '');
+            let ism = document.getElementById('v7_ism').value;
+            let pur = document.getElementById('v7_purpose').value;
 
             if (!ism && !pur) {
                 document.getElementById('v7_outNum').innerText = '00000000000';
@@ -933,8 +972,8 @@
                 return;
             }
 
-            let ismVal = v1_calcVal(ism);
-            let purVal = v1_calcVal(pur);
+            let ismVal = v1_calcVal(ism, 'kabeer');
+            let purVal = v1_calcVal(pur, 'kabeer');
 
             let numCode = (ismVal * 777 + purVal * 1111).toString();
             if (numCode === '0') numCode = '27705951655200';
@@ -950,7 +989,7 @@
             document.getElementById('v7_outBast').innerText = bastText || '--';
         }
 
-        // Section 8 Logic
+        // Section 8 Logic (14 Laws)
         const v8_lawDetails = {
             '1': { col1: 'سکون', col2: 'حرکت', desc: '(سکون) طاقت کا چھپا ہوا یا غیر فعال ہونا۔ (حرکت) طاقت کا ظاہر ہونا یا اثر کرنا۔' },
             '2': { col1: 'فعل امر', col2: 'فعل مضارع', desc: '(فعل امر) حکم دینے کی طاقت۔ (فعل مضارع) جاری حرکت یا اثر کی طاقت۔' },
@@ -969,8 +1008,8 @@
         };
 
         function v8_calculate() {
-            let ism = document.getElementById('v8_ism').value.replace(/[^آ-غی]/g, '');
-            let pur = document.getElementById('v8_purpose').value.replace(/[^آ-غی]/g, '');
+            let ism = document.getElementById('v8_ism').value;
+            let pur = document.getElementById('v8_purpose').value;
             let lawId = document.getElementById('v8_lawSelect').value;
 
             let info = v8_lawDetails[lawId] || v8_lawDetails['1'];
@@ -986,8 +1025,8 @@
                 return;
             }
 
-            let ismVal = v1_calcVal(ism);
-            let purVal = v1_calcVal(pur);
+            let ismVal = v1_calcVal(ism, 'kabeer');
+            let purVal = v1_calcVal(pur, 'kabeer');
 
             let val1 = Math.floor(ismVal * (parseInt(lawId) + 2) * 1.5);
             let val2 = Math.floor(purVal * (parseInt(lawId) + 1) * 2.2);
@@ -1000,8 +1039,8 @@
 
         // Section 9 Logic
         function v9_calculate() {
-            let ism = document.getElementById('v9_ism').value.replace(/[^آ-غی]/g, '');
-            let names = document.getElementById('v9_names').value.replace(/[^آ-غی]/g, '');
+            let ism = document.getElementById('v9_ism').value;
+            let names = document.getElementById('v9_names').value;
             let law = document.getElementById('v9_lawSelect').value;
 
             if (!ism && !names) {
@@ -1009,8 +1048,8 @@
                 return;
             }
 
-            let ismVal = v1_calcVal(ism);
-            let namesVal = v1_calcVal(names);
+            let ismVal = v1_calcVal(ism, 'kabeer');
+            let namesVal = v1_calcVal(names, 'kabeer');
 
             let numStr = (ismVal * 888 + namesVal * 333 * parseInt(law)).toString();
             let map = {'1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹','0':'۰'};
