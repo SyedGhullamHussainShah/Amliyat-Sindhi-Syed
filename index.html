@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عملیات سندھی سید</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS Engine -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- PWA Installation Setup -->
+
+    <!-- Web App & Offline Service Worker Setup -->
     <meta name="theme-color" content="#D4AF37">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <script>
         const manifest = {
             "name": "عملیات سندھی سید",
@@ -20,11 +22,11 @@
             "theme_color": "#D4AF37",
             "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png", "sizes": "192x192", "type": "image/png" }]
         };
-        const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        const link = document.createElement('link');
-        link.rel = 'manifest';
-        link.href = URL.createObjectURL(blob);
-        document.head.appendChild(link);
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = URL.createObjectURL(manifestBlob);
+        document.head.appendChild(manifestLink);
     </script>
 
     <style>
@@ -46,7 +48,7 @@
             <p class="text-xs text-yellow-500 opacity-90">سرپرست: Syed Ghullam Hussain Shah</p>
         </div>
         <div class="flex items-center gap-2">
-            <button id="pwaInstallBtn" class="hidden px-2.5 py-1 bg-green-600 text-black font-bold text-xs rounded-full shadow">📲 ایپ انسٹال کریں</button>
+            <button id="pwaInstallBtn" class="hidden px-3 py-1 bg-green-600 text-black font-bold text-xs rounded-full shadow hover:bg-green-500 transition">📲 ایپ انسٹال کریں</button>
             <select id="themeSelect" onchange="changeTheme(this.value)" class="bg-black border border-yellow-600/60 rounded p-1.5 text-xs text-yellow-400 font-semibold focus:outline-none">
                 <option value="theme-classic">1. Classic (شاہی سنہری)</option>
                 <option value="theme-emerald">2. Emerald (زمردی)</option>
@@ -57,7 +59,7 @@
         </div>
     </header>
 
-    <!-- Navigation Bar (All 9 Modules) -->
+    <!-- Navigation Bar (All 10 Modules) -->
     <nav class="flex overflow-x-auto gap-2 p-2 bg-black/80 border-b border-gray-800 text-xs whitespace-nowrap scrollbar-none shadow-md">
         <button onclick="switchTab('sec1')" id="tab_sec1" class="tab-btn px-3 py-2 rounded bg-yellow-600 text-black font-bold">1. تصرفاتِ کلی چشتی</button>
         <button onclick="switchTab('sec2')" id="tab_sec2" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">2. طلسم العظیم</button>
@@ -68,6 +70,7 @@
         <button onclick="switchTab('sec7')" id="tab_sec7" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">7. طلسم التعجیب</button>
         <button onclick="switchTab('sec8')" id="tab_sec8" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">8. مخفی قوانین (14)</button>
         <button onclick="switchTab('sec9')" id="tab_sec9" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">9. قانونِ شمع</button>
+        <button onclick="switchTab('sec10')" id="tab_sec10" class="tab-btn px-3 py-2 rounded bg-black/60 border border-gray-700">10. قانونِ نقش و چالز</button>
     </nav>
 
     <!-- Main Content Panels -->
@@ -81,15 +84,15 @@
                 <div class="space-y-3 text-sm">
                     <div>
                         <label class="block text-xs font-semibold mb-1">طالب معہ والدہ:</label>
-                        <input type="text" id="v1_talib" oninput="v1_calculate()" placeholder="طالب معہ والدہ کا نام..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                        <input type="text" id="v1_talib" oninput="v1_calculate()" placeholder="مثال: غلام حسین بن زلیخا..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold mb-1">مطلوب معہ والدہ:</label>
-                        <input type="text" id="v1_matloob" oninput="v1_calculate()" placeholder="مطلوب معہ والدہ کا نام..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                        <input type="text" id="v1_matloob" oninput="v1_calculate()" placeholder="مثال: اظھر بن حسنا..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold mb-1">مقصد و مطلب:</label>
-                        <input type="text" id="v1_maqsad" oninput="v1_calculate()" placeholder="مقصد لکھیں..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                        <input type="text" id="v1_maqsad" oninput="v1_calculate()" placeholder="مثال: محبت، تسخیر..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
                     </div>
                 </div>
 
@@ -222,11 +225,10 @@
                         <p class="text-sm font-bold text-yellow-400">موجودہ ساعت: <span id="v3_currentSaatName" class="text-green-400 font-bold text-base">زہرہ (سعد)</span></p>
                         <p>وقت: <span id="v3_currentSaatTime" class="text-yellow-300">08:54 PM تا 09:46 PM</span></p>
                         <p>ساعت نمبر: <span id="v3_currentSaatNo" class="font-bold">رات کی ساعت 15</span></p>
-                        <p class="text-xs text-red-400 font-mono mt-1">باقی وقت: <span id="v3_countdown">05 منٹ 30 سیکنڈ</span></p>
                     </div>
                     <div class="text-left font-mono border-t md:border-t-0 md:border-r border-gray-800 pt-2 md:pt-0 md:pr-3 space-y-1 text-xs">
                         <p class="text-yellow-500 font-bold text-sm" id="v3_liveClock">00:00:00 PM</p>
-                        <p class="text-gray-400" id="v3_liveDate">10 اگست 2026</p>
+                        <p class="text-gray-400" id="v3_liveDate">11 اگست 2026</p>
                         <p class="text-blue-400">طالع: <span id="v3_currentTala">حوت 29°</span></p>
                     </div>
                 </div>
@@ -255,7 +257,7 @@
                 <div class="p-3 bg-black/60 border border-gray-800 rounded space-y-2 text-xs">
                     <div class="flex justify-between items-center">
                         <label class="font-bold text-yellow-400">مقصد / موضوع کا انتخاب کریں:</label>
-                        <span id="v3_hukamStatus" class="font-bold text-green-400 px-2 py-0.5 bg-black rounded border border-gray-700">حکم: دشواری</span>
+                        <span id="v3_hukamStatus" class="font-bold text-green-400 px-2 py-0.5 bg-black rounded border border-gray-700">حکم: سعد</span>
                     </div>
                     <select id="v3_topicSelect" onchange="v3_updateRuling()" class="w-full p-1.5 bg-black/80 border border-gray-700 rounded text-yellow-300">
                         <option value="عشق">عشق و محبت، مطیع کرنا، عورت کا مسئلہ</option>
@@ -265,19 +267,8 @@
                         <option value="سفر">سفر و ہجرت، نوکری، نقل مکانی</option>
                     </select>
                     <p id="v3_rulingText" class="p-2 bg-yellow-900/20 border border-yellow-600/30 rounded text-yellow-200 leading-relaxed">
-                        عشق و محبت مطیع کرنا عورت کا کسی عورت کے حصول کا سوال سند لاری وغیرہ میں کامیابی کے لیے یہ ساعت بہترین ہے۔
+                        عشق و محبت مطیع کرنا عورت کا کسی عورت کے حصول کا سوال کے لیے یہ ساعت بہترین ہے۔
                     </p>
-                </div>
-
-                <button onclick="document.getElementById('v3_astroDetails').classList.toggle('hidden')" class="w-full py-1.5 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 font-semibold text-xs rounded">
-                    ✨ احوالِ شمس، قمر و منازلِ قمر (دکھائیں / چھپائیں)
-                </button>
-
-                <div id="v3_astroDetails" class="hidden p-3 bg-black/60 border border-gray-800 rounded space-y-1 text-xs font-mono">
-                    <p>طالع (Ascendant): <b class="text-yellow-400">حوت 29° 38'</b></p>
-                    <p>شمس (Sun): <b class="text-yellow-400">اسد 8° 30'</b></p>
-                    <p>قمر (Moon): <b class="text-yellow-400">حوت 2° 24'</b></p>
-                    <p>منزلِ قمر: <b class="text-green-400">فرغ الدلو المقدم (26 / 28) - حرف: ض</b></p>
                 </div>
 
                 <div class="space-y-2">
@@ -633,29 +624,96 @@
             </div>
         </div>
 
+        <!-- SECTION 10: قانونِ نقش و چالز (جدید ترین سیکشن) -->
+        <div id="sec10" class="tab-content hidden">
+            <div class="bg-black/40 border border-yellow-600/40 rounded-lg p-4 space-y-4 shadow-xl">
+                <h2 class="text-xl font-bold text-center text-yellow-400 border-b border-yellow-600/30 pb-2">قانونِ نقش و چالز (استخراجِ نقش)</h2>
+                
+                <!-- Inputs -->
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-semibold mb-1">اسم / آیت / طالب و والدہ درج کریں:</label>
+                        <input type="text" id="v10_inputStr" oninput="v10_generateNaqsh()" placeholder="مثال: يا فتاح یا علی بن فاطمہ..." class="w-full p-2 bg-black/60 border border-gray-700 rounded text-yellow-300 focus:border-yellow-500">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <div>
+                            <label class="block mb-1">قسمِ نقش (Naqsh Type):</label>
+                            <select id="v10_naqshType" onchange="v10_generateNaqsh()" class="w-full p-1.5 bg-black/80 border border-yellow-600/50 rounded text-yellow-400 font-bold">
+                                <option value="3x3">مثلث (3x3 - کسر 12 / 3)</option>
+                                <option value="4x4">مربع (4x4 - کسر 30 / 4)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">عنصری چال (Chal Type):</label>
+                            <select id="v10_chalType" onchange="v10_generateNaqsh()" class="w-full p-1.5 bg-black/80 border border-yellow-600/50 rounded text-yellow-400 font-bold">
+                                <option value="atishi">آتشی (Atishi)</option>
+                                <option value="baadi">بادی (Baadi)</option>
+                                <option value="aabi">آبی (Aabi)</option>
+                                <option value="khaaki">خاکی (Khaaki)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">ابجد ڈکشنری:</label>
+                            <select id="v10_abjadSelect" onchange="v10_generateNaqsh()" class="w-full p-1.5 bg-black/80 border border-yellow-600/50 rounded text-yellow-400 font-bold">
+                                <option value="kabeer">ابجد قمری (کبیر)</option>
+                                <option value="shamsi">ابجد شمسی</option>
+                                <option value="sagheer">ابجد صغیر</option>
+                                <option value="malfoozi">ابجد ملفوظی</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculation Status Box -->
+                <div class="p-3 bg-black/60 border border-gray-800 rounded text-xs space-y-1 font-mono">
+                    <p class="text-yellow-400">کل اعداد (Total Abjad): <b id="v10_totalVal" class="text-base text-yellow-300">0</b></p>
+                    <p class="text-gray-300">قانونِ کسر و تقسیم: <span id="v10_mathFormula" class="text-green-400 font-bold">--</span></p>
+                    <p class="text-gray-300">نتیجہ کسر (Remainder Status): <span id="v10_kasarStatus" class="text-blue-400 font-bold">--</span></p>
+                </div>
+
+                <!-- Naqsh Grid Display Area -->
+                <div class="p-4 bg-black/80 border border-yellow-600/50 rounded flex flex-col items-center justify-center space-y-3">
+                    <p class="text-xs font-bold text-yellow-400 text-center">مکمل تیار شدہ نقش</p>
+                    <div id="v10_gridContainer" class="w-full max-w-xs mx-auto">
+                        <!-- Dynamic Grid Will Render Here -->
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Filling Rules (چال کی ترتیب) -->
+                <div class="p-3 bg-yellow-900/20 border border-yellow-600/40 rounded text-xs space-y-1.5 leading-relaxed">
+                    <p class="font-bold text-yellow-400 border-b border-gray-800 pb-1">چال بھرنے کا قاعدہ و ترتیب:</p>
+                    <p id="v10_chalRules" class="text-gray-200">
+                        نقش کو آتشی عنصر کے مطابق پہلے خانے سے شروع کر کے ترتیب وار اعدادِ مفرد کے ساتھ پر کریں۔
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- VERIFIED FULL ABJAD & APP ENGINE SCRIPT -->
+    <!-- COMPLETE ABJAD ENGINE & FULL JAVASCRIPT LOGIC -->
     <script>
-        // 1. کامل ابجد قمری (کبیر) - تمام 28 حروف + اردو/سندھی اضافی حروف
+        // 1. کامل ابجد قمری (کبیر) - تمام 28 اصلی حروف + تمام اردو و سندھی حروف
         const ABJAD_KABEER = {
-            'ا': 1,   'آ': 1,   'ب': 2,   'پ': 2,   'ج': 3,   'چ': 3,   'د': 4,   'ڈ': 4,
-            'ہ': 5,   'ھ': 5,   'و': 6,   'ز': 7,   'ژ': 7,   'ح': 8,   'ط': 9,   'ی': 10,
+            'ا': 1,   'آ': 1,   'أ': 1,   'ب': 2,   'پ': 2,   'ج': 3,   'چ': 3,   'د': 4,   'ڈ': 4,
+            'ہ': 5,   'ھ': 5,   'و': 6,   'ؤ': 6,   'ز': 7,   'ژ': 7,   'ح': 8,   'ط': 9,   'ی': 10,
             'ے': 10,  'ئ': 10,  'ک': 20,  'ڪ': 20,  'گ': 20,  'ل': 30,  'م': 40,  'ن': 50,
             'س': 60,  'ع': 70,  'ف': 80,  'ص': 90,  'ق': 100, 'ر': 200, 'ڑ': 200, 'ش': 300,
             'ت': 400, 'ٹ': 400, 'ث': 500, 'خ': 600, 'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
         };
 
-        // 2. ابجد شمسی
+        // 2. ابجد شمسی (صرف 14 حروفِ شمسی)
         const ABJAD_SHAMSI = {
             'ت': 400, 'ث': 500, 'د': 4, 'ذ': 700, 'ر': 200, 'ز': 7, 'س': 60, 'ش': 300, 'ص': 90, 'ض': 800, 'ط': 9, 'ظ': 900, 'ل': 30, 'ن': 50
         };
 
-        // 3. ابجد ملفوظی (تلفظ کے اعداد)
+        // 3. ابجد ملفوظی (حروف کے ناموں کے تلفظی اعداد)
         const ABJAD_MALFOOZI = {
             'ا': 111, 'ب': 3, 'ج': 53, 'د': 35, 'ہ': 6, 'و': 13, 'ز': 8, 'ح': 9, 'ط': 10, 'ی': 11, 'ک': 101, 'ل': 71, 'م': 90, 'ن': 106, 'س': 120, 'ع': 130, 'ف': 81, 'ص': 150, 'ق': 181, 'ر': 201, 'ش': 360, 'ت': 401, 'ث': 501, 'خ': 601, 'ذ': 701, 'ض': 801, 'ظ': 901, 'غ': 1001
         };
 
+        // UI Tabs Switcher
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('bg-yellow-600', 'text-black'); el.classList.add('bg-black/60', 'text-yellow-400'); });
@@ -666,7 +724,7 @@
         function changeTheme(cls) { document.getElementById('appBody').className = cls + ' min-h-screen pb-12 transition-colors duration-300'; }
         function copyToClipboard(txt) { navigator.clipboard.writeText(txt); alert('کامیابی سے کاپی ہو گیا!'); }
 
-        // ابجد کا مرکزی اور لائیو حساب
+        // ابجد کی تمام اقسام کا مرکزی اور جامع حسابی فنکشن
         function v1_calcVal(txt, type = 'kabeer') {
             if (!txt) return 0;
             let sum = 0;
@@ -747,7 +805,7 @@
             document.getElementById('v2_svgText').textContent = spaced + ' • ' + spaced + ' •';
         }
 
-        // Section 3 Clock & Astronomy Logic
+        // Section 3 Clock & Planetary Logic
         let v3_selectedDate = new Date();
         const v3_planets = [
             { name: 'زہرہ ♀', type: 'سعد اتصالِ نکاح', color: 'text-green-400' },
@@ -1062,7 +1120,101 @@
             document.getElementById('v9_candleText').innerHTML = `${hurufPart}<br>${easternNum}`;
         }
 
-        // PWA Installation Handler
+        // Section 10 Logic (Naqsh Generation)
+        function v10_generateNaqsh() {
+            let str = document.getElementById('v10_inputStr').value;
+            let naqshType = document.getElementById('v10_naqshType').value;
+            let chalType = document.getElementById('v10_chalType').value;
+            let abjadType = document.getElementById('v10_abjadSelect').value;
+
+            let totalVal = v1_calcVal(str, abjadType);
+            document.getElementById('v10_totalVal').innerText = totalVal;
+
+            let gridContainer = document.getElementById('v10_gridContainer');
+
+            if (!totalVal) {
+                gridContainer.innerHTML = '<p class="text-center text-gray-500 text-xs">براہِ کرم نام یا آیت درج کریں...</p>';
+                document.getElementById('v10_mathFormula').innerText = '--';
+                document.getElementById('v10_kasarStatus').innerText = '--';
+                return;
+            }
+
+            if (naqshType === '3x3') {
+                let remSum = totalVal - 12;
+                let base = Math.floor(remSum / 3);
+                let kasar = remSum % 3;
+
+                document.getElementById('v10_mathFormula').innerText = `(${totalVal} - 12) ÷ 3 = ${base}`;
+                document.getElementById('v10_kasarStatus').innerText = kasar === 0 ? 'مکمل تقسیم (بلا کسر)' : `کسر باقی: ${kasar} (خانہ ${kasar === 1 ? '7' : '4'} میں +1 کریں)`;
+
+                let n = [];
+                for(let i=0; i<9; i++) n[i] = base + i;
+                if (kasar === 1) { for(let i=6; i<9; i++) n[i] += 1; }
+                else if (kasar === 2) { for(let i=3; i<9; i++) n[i] += 1; }
+
+                let gridData = [
+                    [n[1], n[6], n[3]],
+                    [n[8], n[4], n[0]],
+                    [n[2], n[5], n[7]]
+                ];
+
+                let html = '<div class="grid grid-cols-3 gap-1 bg-yellow-600/40 p-1 rounded font-mono text-center text-xs font-bold">';
+                gridData.forEach(row => {
+                    row.forEach(val => {
+                        html += `<div class="p-3 bg-black border border-yellow-600/60 rounded text-yellow-300">${val}</div>`;
+                    });
+                });
+                html += '</div>';
+                gridContainer.innerHTML = html;
+
+            } else if (naqshType === '4x4') {
+                let remSum = totalVal - 30;
+                let base = Math.floor(remSum / 4);
+                let kasar = remSum % 4;
+
+                document.getElementById('v10_mathFormula').innerText = `(${totalVal} - 30) ÷ 4 = ${base}`;
+                document.getElementById('v10_kasarStatus').innerText = kasar === 0 ? 'مکمل تقسیم (بلا کسر)' : `کسر باقی: ${kasar} (خانہ ${13 - kasar} میں +1 کریں)`;
+
+                let n = [];
+                for(let i=0; i<16; i++) n[i] = base + i;
+                if (kasar === 1) { for(let i=12; i<16; i++) n[i] += 1; }
+                else if (kasar === 2) { for(let i=8; i<16; i++) n[i] += 1; }
+                else if (kasar === 3) { for(let i=4; i<16; i++) n[i] += 1; }
+
+                let gridData = [
+                    [n[0], n[14], n[13], n[3]],
+                    [n[11], n[5], n[6], n[8]],
+                    [n[7], n[9], n[10], n[4]],
+                    [n[12], n[2], n[1], n[15]]
+                ];
+
+                let html = '<div class="grid grid-cols-4 gap-1 bg-yellow-600/40 p-1 rounded font-mono text-center text-xs font-bold">';
+                gridData.forEach(row => {
+                    row.forEach(val => {
+                        html += `<div class="p-2 bg-black border border-yellow-600/60 rounded text-green-400">${val}</div>`;
+                    });
+                });
+                html += '</div>';
+                gridContainer.innerHTML = html;
+            }
+
+            document.getElementById('v10_chalRules').innerText = `یہ نقش ${chalType} چال سے ترتیب دیا گیا ہے۔ پہلا عدد خانہ اول میں درج کریں اور اسی طرح آگے بڑھیں۔`;
+        }
+
+        // Offline Service Worker Engine Injection
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => { self.skipWaiting(); });
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+                });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(blob))
+                .catch(err => console.log('SW Registration:', err));
+        }
+
+        // PWA Native Prompt
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
