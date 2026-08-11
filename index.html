@@ -1,1 +1,699 @@
 
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#8b7355" />
+  <meta name="description" content="عملیات سندھی سید - ساعت النجم، قوانین طلسمات، طلسم العظیم، حسابات روحانی" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>عملیات سندھی سید</title>
+  <style>
+    :root {
+      --bg: #f5f0e6;
+      --card: #faf6ee;
+      --border: #d4c4a8;
+      --primary: #8b7355;
+      --primary-dark: #6b5340;
+      --accent: #a67c52;
+      --text: #3d2b1f;
+      --muted: #7a6a55;
+      --success: #4a7c59;
+      --input-bg: #fffdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: 70px;
+    }
+    .app { max-width: 480px; margin: 0 auto; }
+    header {
+      text-align: center;
+      padding: 14px 12px 10px;
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 2px; }
+    header .subtitle { font-size: 0.78rem; color: var(--muted); }
+    .lang-switch { display: flex; justify-content: center; gap: 6px; margin: 8px 0 4px; }
+    .lang-btn {
+      padding: 4px 14px; border: 1px solid var(--border); background: var(--card);
+      border-radius: 20px; font-size: 0.82rem; cursor: pointer; color: var(--text);
+    }
+    .lang-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--card); border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around;
+      padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+      z-index: 200; max-width: 480px; margin: 0 auto;
+    }
+    .nav-item {
+      flex: 1; text-align: center; padding: 6px 2px; font-size: 0.68rem;
+      color: var(--muted); cursor: pointer; border: none; background: none;
+    }
+    .nav-item.active { color: var(--primary-dark); font-weight: 600; }
+    .nav-item span { display: block; font-size: 1.15rem; margin-bottom: 2px; }
+    .section { display: none; padding: 12px; }
+    .section.active { display: block; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .card-title {
+      font-size: 0.95rem; font-weight: 600; color: var(--primary-dark);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 4px; }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--input-bg); font-size: 1rem;
+      color: var(--text); margin-bottom: 10px; outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn {
+      display: block; width: 100%; padding: 13px; border: none; border-radius: 12px;
+      background: var(--primary); color: #fff; font-size: 1.05rem; font-weight: 600;
+      cursor: pointer; margin-top: 8px;
+    }
+    .btn:active { background: var(--primary-dark); }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    .result-box {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; margin-top: 6px; display: flex; justify-content: space-between;
+      align-items: center; cursor: pointer;
+    }
+    .result-box:active { background: #f0e8d8; }
+    .result-num { font-size: 1.15rem; font-weight: 700; color: var(--primary-dark); }
+    .copy-hint { font-size: 0.7rem; color: var(--muted); }
+    .note {
+      font-size: 0.75rem; color: var(--muted); background: #f8f1e3;
+      padding: 8px 10px; border-radius: 8px; margin-top: 8px; line-height: 1.4;
+    }
+    .toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+      background: var(--success); color: #fff; padding: 10px 22px; border-radius: 30px;
+      font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999;
+    }
+    .toast.show { opacity: 1; }
+    .clock-display {
+      text-align: center; font-size: 1.8rem; font-weight: 700;
+      color: var(--primary-dark); margin: 8px 0; letter-spacing: 1px;
+    }
+    .saat-current {
+      text-align: center; background: #fff; border: 2px solid var(--primary);
+      border-radius: 12px; padding: 12px; margin: 10px 0;
+    }
+    .saat-current .label { font-size: 0.8rem; color: var(--muted); }
+    .saat-current .value { font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); margin-top: 4px; }
+    .mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+    .mode-btn {
+      flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--card); font-size: 0.9rem; cursor: pointer;
+    }
+    .mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .saat-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 8px; }
+    .saat-table th, .saat-table td { border: 1px solid var(--border); padding: 6px 4px; text-align: center; }
+    .saat-table th { background: var(--primary); color: #fff; }
+    .saat-table tr.current { background: #e8f5e9; font-weight: 600; }
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .home-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px 10px; text-align: center; cursor: pointer;
+    }
+    .home-card:active { background: #f0e8d8; }
+    .home-card .icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .home-card .title { font-size: 0.85rem; font-weight: 600; color: var(--primary-dark); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>عملیات سندھی سید</h1>
+      <div class="subtitle">دولت پور • شہید بینظیر آباد • سندھ</div>
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ur">اردو</button>
+        <button class="lang-btn" data-lang="ar">عربي</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+    </header>
+
+    <!-- ہوم -->
+    <section id="sec-home" class="section active">
+      <div class="card">
+        <div class="card-title">خوش آمدید</div>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:12px;">تمام عملیات، ساعات، قوانین اور حسابات ایک ہی جگہ۔</p>
+        <div class="home-grid">
+          <div class="home-card" onclick="showSection('saat')"><div class="icon">🕐</div><div class="title">ساعت النجم</div></div>
+          <div class="home-card" onclick="showSection('qawanin')"><div class="icon">📜</div><div class="title">قوانین طلسمات</div></div>
+          <div class="home-card" onclick="showSection('tilsam')"><div class="icon">✨</div><div class="title">طلسم العظیم</div></div>
+          <div class="home-card" onclick="showSection('hisabat')"><div class="icon">🤝</div><div class="title">حسابات روحانی</div></div>
+          <div class="home-card" onclick="showSection('tashkhis')"><div class="icon">🔍</div><div class="title">تشخیص</div></div>
+          <div class="home-card" onclick="showSection('mizan')"><div class="icon">⚖️</div><div class="title">میزان الحروف</div></div>
+          <div class="home-card" onclick="showSection('majmua')"><div class="icon">🕯️</div><div class="title">مجموعہ طلسمات</div></div>
+          <div class="home-card" onclick="showSection('naqsh')"><div class="icon">🔲</div><div class="title">نقش و اوفاق</div></div>
+          <div class="home-card" onclick="showSection('settings')"><div class="icon">⚙️</div><div class="title">سیٹنگز</div></div>
+        </div>
+      </div>
+      <div class="note">نوٹ: یہ ایپ مکمل آف لائن کام کرتی ہے۔ اسے Install کر کے ہوم اسکرین پر رکھیں۔</div>
+    </section>
+
+    <!-- ساعت النجم -->
+    <section id="sec-saat" class="section">
+      <div class="card">
+        <div class="card-title">ساعت النجم</div>
+        <div class="clock-display" id="liveClock">--:--:--</div>
+        <div class="saat-current">
+          <div class="label">موجودہ سیارہ ساعت</div>
+          <div class="value" id="currentSaat">---</div>
+          <div style="font-size:0.8rem; color:var(--muted); margin-top:4px;" id="currentDay">---</div>
+        </div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeAuto" onclick="setSaatMode('auto')">Auto</button>
+          <button class="mode-btn" id="modeCustom" onclick="setSaatMode('custom')">Custom</button>
+        </div>
+        <div id="autoFields">
+          <label>شہر</label>
+          <select id="citySelect">
+            <option value="daulatpur" selected>دولت پور (شہید بینظیر آباد)</option>
+            <option value="karachi">کراچی</option>
+            <option value="hyderabad">حیدرآباد</option>
+            <option value="sukkur">سکھر</option>
+            <option value="lahore">لاہور</option>
+            <option value="islamabad">اسلام آباد</option>
+          </select>
+        </div>
+        <div id="customFields" style="display:none;">
+          <div class="row">
+            <div><label>سن رائز</label><input type="time" id="sunriseInput" value="05:56" /></div>
+            <div><label>سن سیٹ</label><input type="time" id="sunsetInput" value="19:12" /></div>
+          </div>
+        </div>
+        <button class="btn" onclick="calculateSaat()">ساعت معلوم کریں</button>
+      </div>
+      <div class="card"><div class="card-title">دن کی ساعات</div><div id="daySaatTable"></div></div>
+      <div class="card"><div class="card-title">رات کی ساعات</div><div id="nightSaatTable"></div></div>
+      <div class="note">نوٹ: Auto موڈ میں ڈیوائس کا موجودہ وقت استعمال ہوتا ہے۔ Custom میں آپ خود سورج طلوع و غروب کا وقت ڈال سکتے ہیں۔</div>
+    </section>
+
+    <!-- قوانین -->
+    <section id="sec-qawanin" class="section">
+      <div class="card">
+        <div class="card-title">قوانین طلسمات روحانی</div>
+        <label>قانون منتخب کریں</label>
+        <select id="qanoonSelect">
+          <option value="">-- قانون چنیں --</option>
+          <option value="sukoon">قانون سکون و حرکت</option>
+          <option value="amr">قانون فعل امر و مضارع</option>
+          <option value="amr_alk">قانون فعل امر (الک)</option>
+          <option value="mustaqar">قانون مستقر و مستودع</option>
+          <option value="mahin">قانون مہین و مسيطر</option>
+          <option value="fath">قانون فتح القفل</option>
+          <option value="mighlaq">قانون مغلاق و مفتاح</option>
+          <option value="sama">قانون السماء و الأرض</option>
+          <option value="jazibiya">قانون الجاذبية</option>
+          <option value="miftah">قانون مفتاح الغیب</option>
+          <option value="zuhur">قانون ظهور الباطن المخفی</option>
+          <option value="ikhtifa">قانون الإختفاء</option>
+          <option value="taajib">قانون التعجیب</option>
+        </select>
+        <label>اسم / آیت / جملہ</label>
+        <textarea id="qanoonName" rows="2" placeholder="یہاں لکھیں..."></textarea>
+        <label>مقصد</label>
+        <textarea id="qanoonMaqsad" rows="2" placeholder="مقصد لکھیں..."></textarea>
+        <button class="btn" onclick="calculateQanoon()">حساب کریں</button>
+        <div id="qanoonResult" style="display:none; margin-top:12px;">
+          <div class="result-box" onclick="copyText(this)"><div><div style="font-size:0.75rem;color:var(--muted)">پہلا نتیجہ</div><div class="result-num" id="qRes1">—</div></div><div class="copy-hint">کاپی</div></div>
+          <div class="result-box" onclick="copyText(this)"><div><div style="font-size:0.75rem;color:var(--muted)">دوسرا نتیجہ</div><div class="result-num" id="qRes2">—</div></div><div class="copy-hint">کاپی</div></div>
+          <div class="note" id="qanoonNote"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- طلسم العظیم -->
+    <section id="sec-tilsam" class="section">
+      <div class="card">
+        <div class="card-title">طلسم العظیم</div>
+        <label>نام</label>
+        <input type="text" id="tilsamName" placeholder="نام لکھیں" />
+        <label>مقصد</label>
+        <input type="text" id="tilsamMaqsad" placeholder="مقصد لکھیں" />
+        <button class="btn" onclick="generateTilsam()">طلسم بنائیں</button>
+        <div id="tilsamOutput" class="result-box" style="display:none; margin-top:12px; flex-direction:column; align-items:stretch;" onclick="copyText(this)">
+          <div id="tilsamText" style="text-align:center; font-size:1.1rem; word-break:break-all;"></div>
+          <div class="copy-hint" style="text-align:center; margin-top:6px;">کاپی کرنے کے لیے کلک کریں</div>
+        </div>
+        <div class="note">نوٹ: نتیجہ کو کاپی کر کے استعمال کریں۔</div>
+      </div>
+    </section>
+
+    <!-- حسابات -->
+    <section id="sec-hisabat" class="section">
+      <div class="card">
+        <div class="card-title">حسابات روحانی چشتی</div>
+        <label>قسم</label>
+        <select id="hisabType">
+          <option value="rishta">تعلقات رشتہ</option>
+          <option value="sharakat">شراکت و دوستی</option>
+          <option value="ilaqa">علاقہ موافقت</option>
+        </select>
+        <label>پہلا نام</label>
+        <input type="text" id="hisabName1" placeholder="پہلا نام" />
+        <label>دوسرا نام</label>
+        <input type="text" id="hisabName2" placeholder="دوسرا نام" />
+        <button class="btn" onclick="calculateHisab()">حساب کریں</button>
+        <div id="hisabResult" class="note" style="display:none; margin-top:12px;"></div>
+      </div>
+    </section>
+
+    <!-- تشخیص -->
+    <section id="sec-tashkhis" class="section">
+      <div class="card">
+        <div class="card-title">تشخیص بذریعہ علم الاعداد</div>
+        <label>نام</label>
+        <input type="text" id="tashName" placeholder="نام" />
+        <label>تاریخ</label>
+        <input type="text" id="tashDate" placeholder="مثال: 15-08-1990" />
+        <label>دن</label>
+        <select id="tashDay">
+          <option value="1">اتوار</option><option value="2">پیر</option><option value="3">منگل</option>
+          <option value="4">بدھ</option><option value="5">جمعرات</option><option value="6">جمعہ</option><option value="7">ہفتہ</option>
+        </select>
+        <label>الہامی حرف (اختیاری)</label>
+        <input type="text" id="tashHarf" placeholder="حرف" maxlength="1" />
+        <button class="btn" onclick="calculateTashkhis()">تشخیص کریں</button>
+        <div id="tashResult" class="note" style="display:none; margin-top:12px;"></div>
+      </div>
+    </section>
+
+    <!-- میزان -->
+    <section id="sec-mizan" class="section">
+      <div class="card">
+        <div class="card-title">میزان الحروف فی العناصر</div>
+        <label>نام</label>
+        <input type="text" id="mizanName" placeholder="نام لکھیں" />
+        <button class="btn" onclick="calculateMizan()">حساب کریں</button>
+        <div id="mizanResult" style="display:none; margin-top:12px;">
+          <div class="row">
+            <div class="result-box"><div><div style="font-size:0.75rem;color:var(--muted)">آتش</div><div class="result-num" id="mNar">0</div></div></div>
+            <div class="result-box"><div><div style="font-size:0.75rem;color:var(--muted)">باد</div><div class="result-num" id="mHawa">0</div></div></div>
+          </div>
+          <div class="row" style="margin-top:8px;">
+            <div class="result-box"><div><div style="font-size:0.75rem;color:var(--muted)">آب</div><div class="result-num" id="mMa">0</div></div></div>
+            <div class="result-box"><div><div style="font-size:0.75rem;color:var(--muted)">خاک</div><div class="result-num" id="mTurab">0</div></div></div>
+          </div>
+          <div class="note" id="mizanNote" style="margin-top:10px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- مجموعہ -->
+    <section id="sec-majmua" class="section">
+      <div class="card">
+        <div class="card-title">مجموعہ طلسمات قانون</div>
+        <label>قانون نمبر</label>
+        <select id="majmuaNum">
+          <option value="1">قانون نمبر 1</option><option value="2">قانون نمبر 2</option>
+          <option value="3">قانون نمبر 3</option><option value="4">قانون نمبر 4</option><option value="5">قانون نمبر 5</option>
+        </select>
+        <label>جملہ / بسم اللہ</label>
+        <textarea id="majmuaText" rows="2" placeholder="بسم اللہ الرحمن الرحیم"></textarea>
+        <button class="btn" onclick="calculateMajmua()">نتیجہ نکالیں</button>
+        <div id="majmuaResult" class="note" style="display:none; margin-top:12px; text-align:center; font-size:1.1rem;"></div>
+      </div>
+    </section>
+
+    <!-- نقش و اوفاق -->
+    <section id="sec-naqsh" class="section">
+      <div class="card">
+        <div class="card-title">نقش و اوفاق (عمل سازی)</div>
+        
+        <label>طالب (نام)</label>
+        <input type="text" id="naqshTalib" placeholder="طالب کا نام" />
+        <label>والدہ طالب</label>
+        <input type="text" id="naqshUmmTalib" placeholder="والدہ کا نام" />
+        
+        <label>مطلوب (نام)</label>
+        <input type="text" id="naqshMatlub" placeholder="مطلوب کا نام" />
+        <label>والدہ مطلوب</label>
+        <input type="text" id="naqshUmmMatlub" placeholder="والدہ مطلوب" />
+        
+        <label>اسم / آیت / مقصد</label>
+        <textarea id="naqshMaqsad" rows="2" placeholder="آیت یا مقصد لکھیں"></textarea>
+        
+        <label>نقش کی قسم</label>
+        <select id="naqshType">
+          <option value="3">مثلث (3×3)</option>
+          <option value="4">مربع (4×4)</option>
+          <option value="5">مخمس (5×5)</option>
+        </select>
+        
+        <button class="btn" onclick="generateNaqsh()">نقش تیار کریں</button>
+        
+        <div id="naqshCalc" class="note" style="display:none; margin-top:12px;"></div>
+        
+        <div id="naqshGridWrap" style="display:none; margin-top:12px; overflow-x:auto;">
+          <table id="naqshGrid" class="saat-table" style="margin:0 auto;"></table>
+        </div>
+        
+        <div class="note" style="margin-top:10px;">
+          طریقہ: کل ابجد نکالا جاتا ہے → مخصوص عدد کاٹا جاتا ہے → تقسیم کیا جاتا ہے → شروع کا نمبر ملتا ہے → نقش بھر دیا جاتا ہے۔ 
+          عربی، اردو اور سندھی حروف سب سپورٹ ہیں۔
+        </div>
+      </div>
+    </section>
+
+    <!-- سیٹنگز -->
+    <section id="sec-settings" class="section">
+      <div class="card">
+        <div class="card-title">سیٹنگز</div>
+        <label>زبان</label>
+        <select id="settingLang" onchange="changeLang(this.value)">
+          <option value="ur">اردو</option><option value="ar">عربي</option><option value="en">English</option>
+        </select>
+        <div class="note" style="margin-top:12px;">
+          یہ ایپ Progressive Web App ہے۔ اسے Install کر کے باقاعدہ ایپ کی طرح استعمال کریں۔ آف لائن بھی مکمل کام کرتی ہے۔
+        </div>
+        <button class="btn btn-outline" style="margin-top:12px;" onclick="window.location.reload()">ریفریش</button>
+      </div>
+    </section>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showSection('home')"><span>🏠</span>ہوم</button>
+    <button class="nav-item" onclick="showSection('saat')"><span>🕐</span>ساعت</button>
+    <button class="nav-item" onclick="showSection('qawanin')"><span>📜</span>قوانین</button>
+    <button class="nav-item" onclick="showSection('tilsam')"><span>✨</span>طلسم</button>
+    <button class="nav-item" onclick="showSection('settings')"><span>⚙️</span>سیٹنگز</button>
+  </nav>
+
+  <div class="toast" id="toast">کاپی ہو گیا</div>
+
+  <script>
+    function showSection(name) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const sec = document.getElementById('sec-' + name);
+      if (sec) sec.classList.add('active');
+      const navMap = {home:0, saat:1, qawanin:2, tilsam:3, settings:4};
+      if (navMap[name] !== undefined) document.querySelectorAll('.nav-item')[navMap[name]].classList.add('active');
+      window.scrollTo(0,0);
+    }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg || 'کاپی ہو گیا';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+    function copyText(el) {
+      const text = el.innerText.replace(/کاپی.*/g,'').trim();
+      navigator.clipboard.writeText(text).then(() => showToast('کاپی ہو گیا'));
+    }
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = 
+        String(now.getHours()).padStart(2,'0') + ':' + 
+        String(now.getMinutes()).padStart(2,'0') + ':' + 
+        String(now.getSeconds()).padStart(2,'0');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const abjadMap = {'ا':1,'أ':1,'إ':1,'آ':1,'ب':2,'ج':3,'د':4,'ه':5,'ة':5,'و':6,'ز':7,'ح':8,'ط':9,'ي':10,'ی':10,'ى':10,'ك':20,'ک':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000,'پ':2,'چ':3,'ژ':7,'گ':20};
+    function getAbjad(text) {
+      if (!text) return 0;
+      let sum = 0;
+      for (let ch of text) if (abjadMap[ch]) sum += abjadMap[ch];
+      return sum;
+    }
+
+    const planetOrder = {
+      0:['شمس','زہره','عطارد','قمر','زحل','مشتری','مریخ','شمس','زہره','عطارد','قمر','زحل'],
+      1:['قمر','زحل','مشتری','مریخ','شمس','زہره','عطارد','قمر','زحل','مشتری','مریخ','شمس'],
+      2:['مریخ','شمس','زہره','عطارد','قمر','زحل','مشتری','مریخ','شمس','زہره','عطارد','قمر'],
+      3:['عطارد','قمر','زحل','مشتری','مریخ','شمس','زہره','عطارد','قمر','زحل','مشتری','مریخ'],
+      4:['مشتری','مریخ','شمس','زہره','عطارد','قمر','زحل','مشتری','مریخ','شمس','زہره','عطارد'],
+      5:['زہره','عطارد','قمر','زحل','مشتری','مریخ','شمس','زہره','عطارد','قمر','زحل','مشتری'],
+      6:['زحل','مشتری','مریخ','شمس','زہره','عطارد','قمر','زحل','مشتری','مریخ','شمس','زہره']
+    };
+    const dayNamesUr = ['اتوار','پیر','منگل','بدھ','جمعرات','جمعہ','ہفتہ'];
+    let saatMode = 'auto';
+    function setSaatMode(mode) {
+      saatMode = mode;
+      document.getElementById('modeAuto').classList.toggle('active', mode==='auto');
+      document.getElementById('modeCustom').classList.toggle('active', mode==='custom');
+      document.getElementById('autoFields').style.display = mode==='auto' ? 'block' : 'none';
+      document.getElementById('customFields').style.display = mode==='custom' ? 'block' : 'none';
+    }
+    function parseTime(str) {
+      const [h,m] = str.split(':').map(Number);
+      return h*60 + m;
+    }
+    function calculateSaat() {
+      const now = new Date();
+      const day = now.getDay();
+      document.getElementById('currentDay').textContent = dayNamesUr[day];
+      let sunriseMin = 5*60+56, sunsetMin = 19*60+12;
+      if (saatMode === 'custom') {
+        sunriseMin = parseTime(document.getElementById('sunriseInput').value);
+        sunsetMin = parseTime(document.getElementById('sunsetInput').value);
+      }
+      const dayLength = sunsetMin - sunriseMin;
+      const nightLength = 24*60 - dayLength;
+      const dayHour = dayLength / 12;
+      const nightHour = nightLength / 12;
+      const nowMin = now.getHours()*60 + now.getMinutes();
+      let currentPlanet = '---';
+      const isDay = nowMin >= sunriseMin && nowMin < sunsetMin;
+      const planets = planetOrder[day];
+
+      let dayHtml = '<table class="saat-table"><tr><th>ساعت</th><th>سیارہ</th><th>وقت</th></tr>';
+      for (let i=0; i<12; i++) {
+        const start = sunriseMin + i*dayHour;
+        const end = start + dayHour;
+        const timeStr = String(Math.floor(start/60)).padStart(2,'0')+':'+String(Math.floor(start%60)).padStart(2,'0')+' - '+String(Math.floor(end/60)).padStart(2,'0')+':'+String(Math.floor(end%60)).padStart(2,'0');
+        const isCurrent = isDay && nowMin >= start && nowMin < end;
+        if (isCurrent) currentPlanet = planets[i];
+        dayHtml += '<tr class="'+(isCurrent?'current':'')+'"><td>'+(i+1)+'</td><td>'+planets[i]+'</td><td>'+timeStr+'</td></tr>';
+      }
+      dayHtml += '</table>';
+      document.getElementById('daySaatTable').innerHTML = dayHtml;
+
+      let nightHtml = '<table class="saat-table"><tr><th>ساعت</th><th>سیارہ</th><th>وقت</th></tr>';
+      for (let i=0; i<12; i++) {
+        let start = sunsetMin + i*nightHour;
+        if (start >= 24*60) start -= 24*60;
+        let end = start + nightHour;
+        if (end >= 24*60) end -= 24*60;
+        const timeStr = String(Math.floor(start/60)).padStart(2,'0')+':'+String(Math.floor(start%60)).padStart(2,'0')+' - '+String(Math.floor(end/60)).padStart(2,'0')+':'+String(Math.floor(end%60)).padStart(2,'0');
+        const isCurrent = !isDay && ((nowMin >= start && nowMin < end) || (start > end && (nowMin >= start || nowMin < end)));
+        if (isCurrent) currentPlanet = planets[i];
+        nightHtml += '<tr class="'+(isCurrent?'current':'')+'"><td>'+(i+1)+'</td><td>'+planets[i]+'</td><td>'+timeStr+'</td></tr>';
+      }
+      nightHtml += '</table>';
+      document.getElementById('nightSaatTable').innerHTML = nightHtml;
+      document.getElementById('currentSaat').textContent = currentPlanet;
+    }
+
+    const qanoonNotes = {
+      sukoon:'سکون و حرکت: سکون کے لیے پہلا نمبر، حرکت کے لیے دوسرا۔',
+      amr:'فعل امر و مضارع: امر اور مضارع کے نمبر۔',
+      amr_alk:'فعل امر (الک) کے لیے مخصوص حساب۔',
+      mustaqar:'مستقر و مستودع کا قانون۔',
+      mahin:'مہین و مسيطر۔',
+      fath:'فتح القفل: بند دروازے کھولنے کے لیے۔',
+      mighlaq:'مغلاق و مفتاح: بند و کھول۔',
+      sama:'السماء و الأرض۔',
+      jazibiya:'الجاذبية: کشش کے لیے۔',
+      miftah:'مفتاح الغیب۔',
+      zuhur:'ظهور الباطن المخفی۔',
+      ikhtifa:'الإختفاء۔',
+      taajib:'التعجیب۔'
+    };
+    function calculateQanoon() {
+      const type = document.getElementById('qanoonSelect').value;
+      const name = document.getElementById('qanoonName').value.trim();
+      const maqsad = document.getElementById('qanoonMaqsad').value.trim();
+      if (!type || !name) { showToast('قانون اور اسم ضرور لکھیں'); return; }
+      const a = getAbjad(name);
+      const b = getAbjad(maqsad);
+      let r1 = a + b, r2 = a * 2 + b;
+      if (type === 'sukoon') { r1 = Math.round((a+b)*0.7); r2 = Math.round((a+b)*1.3); }
+      if (type === 'amr') { r1 = a + 29; r2 = b + 1012; }
+      if (type === 'mighlaq') { r1 = a * 12 + b; r2 = b * 15 + a; }
+      if (type === 'fath') { r1 = a * 7 + b; r2 = b * 3; }
+      if (type === 'taajib') { r1 = a * 11; r2 = b * 9 + a; }
+      document.getElementById('qRes1').textContent = r1;
+      document.getElementById('qRes2').textContent = r2;
+      document.getElementById('qanoonNote').textContent = qanoonNotes[type] || '';
+      document.getElementById('qanoonResult').style.display = 'block';
+    }
+
+    function generateTilsam() {
+      const name = document.getElementById('tilsamName').value.trim();
+      const maqsad = document.getElementById('tilsamMaqsad').value.trim();
+      if (!name) { showToast('نام لکھیں'); return; }
+      const result = (name + ' ' + maqsad).replace(/\s+/g,' ').split('').join(' ') + ' 8';
+      document.getElementById('tilsamText').textContent = result;
+      document.getElementById('tilsamOutput').style.display = 'flex';
+    }
+
+    function calculateHisab() {
+      const t = document.getElementById('hisabType').value;
+      const n1 = getAbjad(document.getElementById('hisabName1').value);
+      const n2 = getAbjad(document.getElementById('hisabName2').value);
+      const diff = Math.abs(n1 - n2) % 9;
+      let msg = '';
+      if (t === 'rishta') msg = diff <= 3 ? 'موافقت اچھی ہے۔ رشتہ کے لیے مناسب۔' : 'موافقت کمزور ہے۔ احتیاط کریں۔';
+      else if (t === 'sharakat') msg = diff <= 4 ? 'شراکت ممکن ہے۔' : 'شراکت میں احتیاط ضروری ہے۔';
+      else msg = diff <= 5 ? 'علاقہ موافق ہے۔' : 'علاقہ کم موافق ہے۔';
+      const el = document.getElementById('hisabResult');
+      el.style.display = 'block';
+      el.textContent = msg + ' (فرق نمبر: ' + diff + ')';
+    }
+
+    function calculateTashkhis() {
+      const name = document.getElementById('tashName').value.trim();
+      if (!name) { showToast('نام لکھیں'); return; }
+      const ab = getAbjad(name);
+      const day = document.getElementById('tashDay').value;
+      const el = document.getElementById('tashResult');
+      el.style.display = 'block';
+      el.innerHTML = 'ابجد: ' + ab + '<br>دن نمبر: ' + day + '<br>تشخیص: اس نام کی طاقت ' + (ab % 9 || 9) + ' نمبر پر ہے۔ تفصیلی عمل کے لیے قوانین سیکشن استعمال کریں۔';
+    }
+
+    function calculateMizan() {
+      const name = document.getElementById('mizanName').value.trim();
+      if (!name) { showToast('نام لکھیں'); return; }
+      let nar=0, hawa=0, ma=0, turab=0;
+      for (let ch of name) {
+        const v = abjadMap[ch] || 0;
+        if ([1,3,5,7,9].includes(v%10)) nar += v;
+        else if ([2,4,6,8].includes(v%10)) hawa += v;
+        else if (v >= 10 && v < 100) ma += v;
+        else turab += v;
+      }
+      document.getElementById('mNar').textContent = nar;
+      document.getElementById('mHawa').textContent = hawa;
+      document.getElementById('mMa').textContent = ma;
+      document.getElementById('mTurab').textContent = turab;
+      const max = Math.max(nar,hawa,ma,turab);
+      let dominant = 'متوازن';
+      if (max===nar) dominant='آتش غالب';
+      if (max===hawa) dominant='باد غالب';
+      if (max===ma) dominant='آب غالب';
+      if (max===turab) dominant='خاک غالب';
+      document.getElementById('mizanNote').textContent = 'غالب عنصر: ' + dominant;
+      document.getElementById('mizanResult').style.display = 'block';
+    }
+
+    function calculateMajmua() {
+      const num = document.getElementById('majmuaNum').value;
+      const text = document.getElementById('majmuaText').value.trim() || 'بسم الله الرحمن الرحيم';
+      const ab = getAbjad(text);
+      const el = document.getElementById('majmuaResult');
+      el.style.display = 'block';
+      el.textContent = 'قانون ' + num + ' | ابجد: ' + ab + ' | نتیجہ: ' + (ab * num + 111);
+    }
+
+    // ========== نقش و اوفاق ==========
+    function generateNaqsh() {
+      const talib = document.getElementById('naqshTalib').value.trim();
+      const ummT = document.getElementById('naqshUmmTalib').value.trim();
+      const matlub = document.getElementById('naqshMatlub').value.trim();
+      const ummM = document.getElementById('naqshUmmMatlub').value.trim();
+      const maqsad = document.getElementById('naqshMaqsad').value.trim();
+      const size = parseInt(document.getElementById('naqshType').value) || 3;
+
+      if (!talib && !maqsad) {
+        showToast('کم از کم طالب یا مقصد لکھیں');
+        return;
+      }
+
+      const aTalib = getAbjad(talib);
+      const aUmmT = getAbjad(ummT);
+      const aMatlub = getAbjad(matlub);
+      const aUmmM = getAbjad(ummM);
+      const aMaqsad = getAbjad(maqsad);
+      const total = aTalib + aUmmT + aMatlub + aUmmM + aMaqsad;
+
+      // روایتی طریقہ (مثلث کے لیے 12 کاٹنا، مربع کے لیے 15 وغیرہ)
+      let baseCut = (size === 3) ? 12 : (size === 4) ? 15 : 24;
+      let afterCut = total - baseCut;
+      if (afterCut < 1) afterCut = total;
+      let startNum = Math.floor(afterCut / size);
+      let remainder = afterCut % size;
+
+      // حساب کی تفصیل دکھائیں
+      let calcHtml = 
+        '<b>حساب کی تفصیل:</b><br>' +
+        'طالب ابجد: ' + aTalib + '<br>' +
+        'والدہ طالب: ' + aUmmT + '<br>' +
+        'مطلوب ابجد: ' + aMatlub + '<br>' +
+        'والدہ مطلوب: ' + aUmmM + '<br>' +
+        'مقصد/آیت: ' + aMaqsad + '<br>' +
+        '<b>کل مجموعہ: ' + total + '</b><br>' +
+        'کاٹا گیا عدد: ' + baseCut + '<br>' +
+        'باقی: ' + afterCut + '<br>' +
+        'تقسیم (' + size + '): شروع نمبر = ' + startNum + '<br>' +
+        'کسر / باقی: ' + remainder + (remainder === 0 ? ' (کوئی کسر نہیں)' : '');
+      document.getElementById('naqshCalc').innerHTML = calcHtml;
+      document.getElementById('naqshCalc').style.display = 'block';
+
+      // گرڈ بنائیں (ترتیب وار بھرنا)
+      let cells = size * size;
+      let grid = [];
+      for (let i = 0; i < cells; i++) {
+        grid.push(startNum + i);
+      }
+
+      // اگر کسر ہے تو کچھ خانوں میں ایڈجسٹ (سادہ طریقہ)
+      if (remainder > 0) {
+        for (let i = 0; i < remainder; i++) {
+          grid[cells - 1 - i] += 1;
+        }
+      }
+
+      // ٹیبل بنائیں
+      let html = '';
+      for (let r = 0; r < size; r++) {
+        html += '<tr>';
+        for (let c = 0; c < size; c++) {
+          html += '<td style="font-size:0.85rem; min-width:36px;">' + grid[r * size + c] + '</td>';
+        }
+        html += '</tr>';
+      }
+      document.getElementById('naqshGrid').innerHTML = html;
+      document.getElementById('naqshGridWrap').style.display = 'block';
+      showToast('نقش تیار ہو گیا');
+    }
+
+    function changeLang(lang) {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.lang-btn[data-lang="'+lang+'"]')?.classList.add('active');
+      document.getElementById('settingLang').value = lang;
+    }
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => changeLang(btn.dataset.lang));
+    });
+
+    calculateSaat();
+    setInterval(calculateSaat, 60000);
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW error', e));
+    }
+  </script>
+</body>
+</html>
